@@ -1,0 +1,28 @@
+{
+  "name": "re-hyperapp",
+  "version": "0.0.1",
+  "scripts": {
+    "build:bs": "bsb -make-world",
+    "watch:bs": "bsb -w",
+    "build:js": "rollup -c",
+    "watch:js": "rollup -c -w",
+    "clean": "bsb -clean-world"
+  },
+  "keywords": [
+    "BuckleScript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "rollup-plugin-commonjs": "^8.3.0",
+    "rollup-plugin-node-resolve": "^3.0.3",
+    "rollup-plugin-uglify": "^3.0.0"
+  },
+  "dependencies": {
+    "hyperapp": "^1.1.2"
+  },
+  "peerDependencies": {
+    "bs-platform": "^2.1.0",
+    "rollup": "^0.56.2"
+  }
+}
