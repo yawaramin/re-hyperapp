@@ -1,9 +1,10 @@
 type state = {.
-  "nav": {. "query": string},
-  "bookList": {. "value": option(Component_BookList.books)}
+  "nav": Component_Nav.state, "bookList": Component_BookList.state
 };
 
-let state = {"nav": {query: ""}, "bookList": {value: None}};
+let state = {
+  "nav": Component_Nav.state, "bookList": Component_BookList.state
+};
 
 let actions = {
   "nav": Component_Nav.actions, "bookList": Component_BookList.actions

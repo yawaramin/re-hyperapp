@@ -1,3 +1,6 @@
+type state = {. "query": string};
+
+let state = {"query": ""};
 let actions = {"setQuery": [@bs] string => {query: string}};
 
 let handleSearch(state) = [@bs] event =>

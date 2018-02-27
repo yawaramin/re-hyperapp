@@ -1,11 +1,17 @@
-type books = array({.
+type book = {.
   "id": int,
   "copies": int,
   "title": string,
   "author": string,
   "description": string
-});
+};
 
-let actions = {"set": [@bs] ((books: books) => {value: Some(books)})};
+type state = {. "value": option(array(book))};
 
-let view(state) = Hyperapp.h("span", [||]);
+let state = {"value": None};
+
+let actions = {
+  "set": [@bs] (books: array(book)) => {value: Some(books)}
+};
+
+let view(_) = Hyperapp.h("span", [||]);
