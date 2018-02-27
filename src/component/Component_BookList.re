@@ -14,4 +14,4 @@ let actions = {
   "set": [@bs] (books: array(book)) => {value: Some(books)}
 };
 
-let view(_) = Hyperapp.h("span", [||]);
+let view(_) = Hyperapp.h_("span", [||]);

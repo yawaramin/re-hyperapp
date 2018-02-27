@@ -6,7 +6,10 @@ external string: string => vdom = "%identity";
 external int: int => vdom = "%identity";
 
 [@bs.module "hyperapp"]
-external h: (string, ~attrs: Js.t({..})=?, array(vdom)) => vdom = "";
+external h: (string, Js.t({..}), array(vdom)) => vdom = "";
+
+let empty = Js.Obj.empty();
+let h_(tagName, children) = h(tagName, empty, children);
 
 [@bs.module "hyperapp"] external app: (
   ~state: Js.t({..}) as 'state,

@@ -10,8 +10,8 @@ let actions = {
   "nav": Component_Nav.actions, "bookList": Component_BookList.actions
 };
 
-let view = [@bs] (state: state, _) => Hyperapp.(h("div", [|
-  Component_Nav.view(state##nav), Component_BookList.view(state)|]));
+let view = [@bs] (state: state, _) => Hyperapp.h_("div", [|
+  Component_Nav.view(state##nav), Component_BookList.view(state)|]);
 
 Js.Nullable.bind(Hyperapp.getElementById("main"), [@bs] main =>
   Hyperapp.app(~state, ~actions, ~view, main))

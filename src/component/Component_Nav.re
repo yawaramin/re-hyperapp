@@ -11,11 +11,11 @@ let handleSearch(state) = [@bs] event =>
   };
 
 let view(state) = Hyperapp.(
-  h("nav", ~attrs={"class": "navbar is-dark", "role": "navigation"}, [|
-    h("div", ~attrs={"class": "navbar-brand"}, [|
-      h("a", ~attrs={"class": "navbar-item", "href": "#"}, [|
+  h("nav", {"class": "navbar is-dark", "role": "navigation"}, [|
+    h("div", {"class": "navbar-brand"}, [|
+      h("a", {"class": "navbar-item", "href": "#"}, [|
         h("img",
-          ~attrs={
+          {
             "src": "http://via.placeholder.com/150x20",
             "alt": "Placeholder Logo",
             "width": "150px",
@@ -23,16 +23,16 @@ let view(state) = Hyperapp.(
           },
           [||])|])|]),
 
-    h("div", ~attrs={"class": "navbar-menu is-active"}, [|
-      h("div", ~attrs={"class": "navbar-start"}, [|
-        h("div", ~attrs={"class": "navbar-item"}, [|
+    h("div", {"class": "navbar-menu is-active"}, [|
+      h("div", {"class": "navbar-start"}, [|
+        h("div", {"class": "navbar-item"}, [|
           string("Search Library:")|]),
 
-        h("div", ~attrs={"class": "navbar-item"}, [|
-          h("div", ~attrs={"class": "field"}, [|
-            h("div", ~attrs={"class": "control is-expanded"}, [|
+        h("div", {"class": "navbar-item"}, [|
+          h("div", {"class": "field"}, [|
+            h("div", {"class": "control is-expanded"}, [|
               h("input",
-                ~attrs={
+                {
                   "class": "input is-normal",
                   "type": "text",
                   "onkeypress": handleSearch(state),
