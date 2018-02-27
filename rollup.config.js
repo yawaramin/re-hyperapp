@@ -3,7 +3,7 @@ import node_resolve from 'rollup-plugin-node-resolve';
 import uglify from 'rollup-plugin-uglify';
 
 export default {
-  input: './lib/es6/src/Hyperapp.bs.js',
+  input: './src/Index.bs.js',
   output: {
     name: 'index',
     file: './build/index.js',
