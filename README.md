@@ -3,33 +3,38 @@
 Very raw bindings for the
 [Hyperapp](https://github.com/hyperapp/hyperapp) UI library.
 
-# Build
+## Setup
 
-You'll need these installed:
+You'll need to do the following one-time setup:
 
-- bs-platform
-- rollup
+_Either_ install globally (my preference):
 
-Full BuckleScript build:
+    cd re-hyperapp
+    npm i -g bs-platform
+    npm link bs-platform
 
-    npm run build:bs
+_Or_ install locally:
+
+    cd re-hyperapp
+    npm i bs-platform
+
+_Then,_ install ParcelJS: `npm i -g parcel`
+
+Finally, run the normal install: `npm i`
+
+## Build
+
+Full BuckleScript build: `bsb -make-world`
 
 Incremental and watch for changes (but you probably don't need this if
-you've set your editor to compile on save):
+you've set your editor to
+[compile on save](https://twitter.com/yawaramin/status/962894993537970176)):
+`bsb -w`
 
-    npm run watch:bs
+Bundle and watch for changes: `npm run serve`
 
-Bundle:
-
-    npm run build:js
-
-Bundle and watch for changes:
-
-    npm run watch:js
-
-Production bundle: for now, manually edit the `rollup.config.js` and
-uncomment the `uglify()` line, then make a bundle as above.
+Production bundle: `npm run build`
 
 # Run
 
-Open `index.html`.
+Go to http://localhost:1234
