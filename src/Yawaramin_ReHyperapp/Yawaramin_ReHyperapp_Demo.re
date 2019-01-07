@@ -6,11 +6,6 @@ module Component = Yawaramin_ReHyperapp_Demo_Component;
 module Domain = Yawaramin_ReHyperapp_Demo_Domain;
 module Hyperapp = Yawaramin_ReHyperapp;
 
-type state = {.
-  "nav": Component.Nav.state,
-  "bookList": Component.BookList.state,
-};
-
 let state = {
   "nav": Component.Nav.state,
   "bookList": Component.BookList.state,

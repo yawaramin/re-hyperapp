@@ -1,10 +1,7 @@
-type state = {. "query": string};
-type actions = {. "setQuery": (. string) => state};
-
 let state = {"query": ""};
 
-let actions: actions = {
-  "setQuery": (. string) => {
+let actions = {
+  "setQuery": (. string: string) => {
     Js.log2("Query is:", string);
     {query: string};
   },
@@ -19,7 +16,7 @@ let handleSearch(state, actions) = (. event) =>
 
 let string = Yawaramin_ReHyperapp.string;
 
-let make(~state: state, ~actions: actions, _childen) =
+let make(~state, ~actions, _childen) =
   <nav _class="navbar is-dark" role="navigation">
     <div _class="navbar-brand">
       <a _class="navbar-item" href="#">
