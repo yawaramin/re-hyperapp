@@ -5,10 +5,7 @@
 
     See
     {{:https://reasonml.github.io/reason-react/docs/en/jsx}https://reasonml.github.io/reason-react/docs/en/jsx}
-    for a description of how the transform works.
-
-    This module is still in a prototype state and doesn't offer as much
-    functionality as [Yawaramin_ReHyperapp.h]. */
+    for a description of how the transform works. */
 
 type vdom = Yawaramin_ReHyperapp.vdom;
 
@@ -19,7 +16,7 @@ external createElement: (string, ~props: Js.t({..})=?, array(vdom)) => vdom = "h
 
 /** All valid HTML attributes (that are legal identifiers in OCaml),
     using https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes as
-    a reference. */
+    a reference. This is needed for uncapitalized elements support in JSX. */
 [@bs.obj] external props: (
   ~accept: string=?,
   ~accesskey: string=?,

@@ -19,7 +19,7 @@ let handleSearch(state, actions) = (. event) =>
 
 let string = Yawaramin_ReHyperapp.string;
 
-let view(. state: state, actions: actions) =
+let make(~state: state, ~actions: actions, _childen) =
   <nav _class="navbar is-dark" role="navigation">
     <div _class="navbar-brand">
       <a _class="navbar-item" href="#">

@@ -18,4 +18,4 @@ let actions = {
   "set": (. books: array(book)) => {value: Some(books)},
 };
 
-let view(. _: state, _: actions) = <span></span>;
+let make(~state: state, ~actions: actions, _children) = <span></span>;
