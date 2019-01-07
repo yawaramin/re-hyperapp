@@ -1,7 +1,9 @@
 /** (WIP) very minimalistic bindings to
     {{:https://github.com/jorgebucaran/hyperapp}Hyperapp}. Hyperapp has a
     very tiny API surface and already has a well-defined architecture, so
-    we just follow that. */
+    we just follow that.
+
+    JSX support is implemented in the [ReactDOMRe] module. */
 
 type vdom;
 type app;

@@ -18,4 +18,4 @@ let actions = {
   "set": (. books: array(book)) => {value: Some(books)},
 };
 
-let view(. _: state, _: actions) = Hyperapp.h_("span", [||]);
+let view(. _: state, _: actions) = <span></span>;
