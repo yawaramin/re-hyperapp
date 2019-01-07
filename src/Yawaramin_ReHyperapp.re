@@ -4,18 +4,22 @@
     we just follow that.
 
     JSX support is implemented in the [ReactDOMRe] and [ReasonReact]
-    modules. See the former for more details. Note that for capitalized
-    elements in JSX (i.e. what React would call custom components), the
-    requirement is that the module which will be used as a custom
-    component implement a Hyperapp view function {i but} give it the
-    following shape: [let make(~prop1, ..., ~propN, children) = ...;]. In
-    other words some number of named props and a final parameter for the
-    (possible) children. Usually the props will be [~state] and
-    [~actions] because that's what Hyperapp views expect. */
+    modules. See the former for more details. Note that both of these
+    modules {i should not} be used directly; their purpose is to provide
+    JSX support.
+
+    For capitalized elements in JSX (i.e. what React would call custom
+    components), the requirement is that the module which will be used as
+    a custom component implement a Hyperapp view function {i but} give it
+    the following shape:
+    [let make(~prop1, ..., ~propN, children) = ...;]. In other words some
+    number of named props and a final parameter for the (possible)
+    children. Usually the props will be [~state] and [~actions] because
+    that's what Hyperapp views expect. */
 
 /** Virtual DOM elements. I.e. the things that get rendered by views. */
 type vdom;
-type app;
+type t;
 type element = Dom.element;
 
 external string: string => vdom = "%identity";
@@ -34,15 +38,16 @@ external h: (string, Js.t({..}), array(vdom)) => vdom = "";
 [@bs.module "hyperapp"]
 external h_: (string, [@bs.as {json|{}|json}] _, array(vdom)) => vdom = "h";
 
-/** Most of the type safety of the overall app comes from the way this
+/** [make(~state, ~actions, ~view, element)] creates a Hyperapp instance.
+    Most of the type safety of the overall app comes from the way this
     function is typed: the view function must work with the state (model)
     and actions. */
-[@bs.module "hyperapp"] external app: (
+[@bs.module "hyperapp"] external make: (
   ~state: Js.t({..}) as 'state,
   ~actions: Js.t({..}) as 'actions,
   ~view: (. 'state, 'actions) => vdom,
   element,
-) => app = "";
+) => t = "app";
 
 /** Helper to get the DOM element that the [app] function needs to mount
     the app onto the page. */

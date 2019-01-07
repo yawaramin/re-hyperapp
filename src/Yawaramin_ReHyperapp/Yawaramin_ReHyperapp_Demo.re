@@ -23,5 +23,5 @@ let view(. state, actions) =
   </div>;
 
 Js.Nullable.bind(Hyperapp.getElementById("main"), (. main) =>
-  Hyperapp.app(~state, ~actions, ~view, main)
+  Hyperapp.make(~state, ~actions, ~view, main)
 );
