@@ -7,6 +7,7 @@
     {{:https://reasonml.github.io/reason-react/docs/en/jsx}https://reasonml.github.io/reason-react/docs/en/jsx}
     for a description of how the transform works. */
 
+type element = Dom.element;
 type vdom = Yawaramin_ReHyperapp.vdom;
 type onDone = (. unit) => Js.Promise.t(unit);
 
@@ -256,10 +257,10 @@ external createElement: (string, ~props: Js.t({..})=?, array(vdom)) => vdom = "h
   /* Hyperapp DOM lifecycle events:
      https://github.com/jorgebucaran/hyperapp#lifecycle-events */
 
-  ~oncreate: (. Dom.element) => unit=?,
-  ~onupdate: (. Dom.element, Js.t({..})) => unit=?,
-  ~onremove: (. Dom.element, onDone) => unit=?,
-  ~ondestroy: (. Dom.element) => unit=?,
+  ~oncreate: (. element) => unit=?,
+  ~onupdate: (. element, Js.t({..})) => unit=?,
+  ~onremove: (. element, onDone) => unit=?,
+  ~ondestroy: (. element) => unit=?,
 
   /* Hyperapp DOM node key: https://github.com/jorgebucaran/hyperapp#keys */
 

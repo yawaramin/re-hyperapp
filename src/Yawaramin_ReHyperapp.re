@@ -16,7 +16,7 @@
 /** Virtual DOM elements. I.e. the things that get rendered by views. */
 type vdom;
 type app;
-type element;
+type element = Dom.element;
 
 external string: string => vdom = "%identity";
 external int: int => vdom = "%identity";
@@ -42,8 +42,7 @@ external h_: (string, [@bs.as {json|{}|json}] _, array(vdom)) => vdom = "h";
   ~actions: Js.t({..}) as 'actions,
   ~view: (. 'state, 'actions) => vdom,
   element,
-) => app =
-  "";
+) => app = "";
 
 /** Helper to get the DOM element that the [app] function needs to mount
     the app onto the page. */

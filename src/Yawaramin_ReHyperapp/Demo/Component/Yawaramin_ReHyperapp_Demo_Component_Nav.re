@@ -1,5 +1,5 @@
 type state = {. "query": string};
-type actions = {."setQuery": (. string) => state};
+type actions = {. "setQuery": (. string) => state};
 
 let state = {"query": ""};
 
