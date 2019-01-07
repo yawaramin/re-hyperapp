@@ -8,6 +8,7 @@
     for a description of how the transform works. */
 
 type vdom = Yawaramin_ReHyperapp.vdom;
+type onDone = (. unit) => Js.Promise.t(unit);
 
 /** The Reason JSX transform uses this to created uncapitalized DOM
     elements. */
@@ -18,6 +19,9 @@ external createElement: (string, ~props: Js.t({..})=?, array(vdom)) => vdom = "h
     using https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes as
     a reference. This is needed for uncapitalized elements support in JSX. */
 [@bs.obj] external props: (
+  /* HTML attributes:
+     https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes */
+
   ~accept: string=?,
   ~accesskey: string=?,
   ~action: string=?,
@@ -96,7 +100,6 @@ external createElement: (string, ~props: Js.t({..})=?, array(vdom)) => vdom = "h
   ~muted: string=?,
   ~name: string=?,
   ~novalidate: string=?,
-  ~onkeypress: (. 'event) => 'state=?,
   ~_open: string=?,
   ~optimum: string=?,
   ~pattern: string=?,
@@ -140,5 +143,127 @@ external createElement: (string, ~props: Js.t({..})=?, array(vdom)) => vdom = "h
   ~value: string=?,
   ~width: string=?,
   ~wrap: string=?,
+
+  /* TODO: SVG attributes:
+     https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute */
+
+  /* DOM events: https://developer.mozilla.org/en-US/docs/Web/Events */
+
+  ~oncached: (. 'cachedEvent) => 'state=?,
+  ~onerror: (. 'errorEvent) => 'state=?,
+  ~onbeforeunload: (. 'beforeunloadEvent) => 'state=?,
+  ~onunload: (. 'unloadEvent) => 'state=?,
+  ~ononline: (. 'onlineEvent) => 'state=?,
+  ~onoffline: (. 'offlineEvent) => 'state=?,
+  ~onfocus: (. 'focusEvent) => 'state=?,
+  ~onblur: (. 'blurEvent) => 'state=?,
+  ~onclose: (. 'closeEvent) => 'state=?,
+  ~onpagehide: (. 'pagehideEvent) => 'state=?,
+  ~onpageshow: (. 'pageshowEvent) => 'state=?,
+  ~onpopstate: (. 'popstateEvent) => 'state=?,
+  ~onanimationstart: (. 'animationstartEvent) => 'state=?,
+  ~onanimationend: (. 'animationendEvent) => 'state=?,
+  ~onanimationiteration: (. 'animationiterationEvent) => 'state=?,
+  ~ontransitionstart: (. 'transitionstartEvent) => 'state=?,
+  ~ontransitioncancel: (. 'transitioncancelEvent) => 'state=?,
+  ~ontransitionend: (. 'transitionendEvent) => 'state=?,
+  ~ontransitionrun: (. 'transitionrunEvent) => 'state=?,
+  ~onreset: (. 'resetEvent) => 'state=?,
+  ~onsubmit: (. 'submitEvent) => 'state=?,
+  ~onbeforeprint: (. 'beforeprintEvent) => 'state=?,
+  ~onafterprint: (. 'afterprintEvent) => 'state=?,
+  ~oncompositionstart: (. 'compositionstartEvent) => 'state=?,
+  ~oncompositionupdate: (. 'compositionupdateEvent) => 'state=?,
+  ~oncompositionend: (. 'compositionendEvent) => 'state=?,
+  ~onfullscreenchange: (. 'fullscreenchangeEvent) => 'state=?,
+  ~onfullscreenerror: (. 'fullscreenerrorEvent) => 'state=?,
+  ~onresize: (. 'resizeEvent) => 'state=?,
+  ~onscroll: (. 'scrollEvent) => 'state=?,
+  ~oncut: (. 'cutEvent) => 'state=?,
+  ~oncopy: (. 'copyEvent) => 'state=?,
+  ~onpaste: (. 'pasteEvent) => 'state=?,
+  ~onkeydown: (. 'keydownEvent) => 'state=?,
+  ~onkeypress: (. 'keypressEvent) => 'state=?,
+  ~onkeyup: (. 'keyupEvent) => 'state=?,
+  ~onauxclick: (. 'auxclickEvent) => 'state=?,
+  ~onclick: (. 'clickEvent) => 'state=?,
+  ~oncontextmenu: (. 'contextmenuEvent) => 'state=?,
+  ~ondblclick: (. 'dblclickEvent) => 'state=?,
+  ~onmousedown: (. 'mousedownEvent) => 'state=?,
+  ~onmouseenter: (. 'mouseenterEvent) => 'state=?,
+  ~onmouseleave: (. 'mouseleaveEvent) => 'state=?,
+  ~onmousemove: (. 'mousemoveEvent) => 'state=?,
+  ~onmouseover: (. 'mouseoverEvent) => 'state=?,
+  ~onmouseout: (. 'mouseoutEvent) => 'state=?,
+  ~onmouseup: (. 'mouseupEvent) => 'state=?,
+  ~onpointerlockchange: (. 'pointerlockchangeEvent) => 'state=?,
+  ~onpointerlockerror: (. 'pointerlockerrorEvent) => 'state=?,
+  ~onselect: (. 'selectEvent) => 'state=?,
+  ~onwheel: (. 'wheelEvent) => 'state=?,
+  ~ondrag: (. 'dragEvent) => 'state=?,
+  ~ondragend: (. 'dragendEvent) => 'state=?,
+  ~ondragenter: (. 'dragenterEvent) => 'state=?,
+  ~ondragstart: (. 'dragstartEvent) => 'state=?,
+  ~ondragleave: (. 'dragleaveEvent) => 'state=?,
+  ~ondragover: (. 'dragoverEvent) => 'state=?,
+  ~ondrop: (. 'dropEvent) => 'state=?,
+  ~onaudioprocess: (. 'audioprocessEvent) => 'state=?,
+  ~oncanplay: (. 'canplayEvent) => 'state=?,
+  ~oncanplaythrough: (. 'canplaythroughEvent) => 'state=?,
+  ~oncomplete: (. 'completeEvent) => 'state=?,
+  ~ondurationchange: (. 'durationchangeEvent) => 'state=?,
+  ~onemptied: (. 'emptiedEvent) => 'state=?,
+  ~onended: (. 'endedEvent) => 'state=?,
+  ~onloadeddata: (. 'loadeddataEvent) => 'state=?,
+  ~onloadedmetadata: (. 'loadedmetadataEvent) => 'state=?,
+  ~onpause: (. 'pauseEvent) => 'state=?,
+  ~onplay: (. 'playEvent) => 'state=?,
+  ~onplaying: (. 'playingEvent) => 'state=?,
+  ~onratechange: (. 'ratechangeEvent) => 'state=?,
+  ~onseeked: (. 'seekedEvent) => 'state=?,
+  ~onseeking: (. 'seekingEvent) => 'state=?,
+  ~onstalled: (. 'stalledEvent) => 'state=?,
+  ~onsuspend: (. 'suspendEvent) => 'state=?,
+  ~ontimeupdate: (. 'timeupdateEvent) => 'state=?,
+  ~onvolumechange: (. 'volumechangeEvent) => 'state=?,
+  ~onwaiting: (. 'waitingEvent) => 'state=?,
+  ~onabort: (. 'abortEvent) => 'state=?,
+  ~onload: (. 'loadEvent) => 'state=?,
+  ~onloadend: (. 'loadendEvent) => 'state=?,
+  ~onloadstart: (. 'loadstartEvent) => 'state=?,
+  ~onprogress: (. 'progressEvent) => 'state=?,
+  ~ontimeout: (. 'timeoutEvent) => 'state=?,
+  ~onchange: (. 'changeEvent) => 'state=?,
+  ~onstorage: (. 'storageEvent) => 'state=?,
+  ~onchecking: (. 'checkingEvent) => 'state=?,
+  ~ondownloading: (. 'downloadingEvent) => 'state=?,
+  ~onnoupdate: (. 'noupdateEvent) => 'state=?,
+  ~onobsolete: (. 'obsoleteEvent) => 'state=?,
+  ~onupdateready: (. 'updatereadyEvent) => 'state=?,
+  ~onbroadcast: (. 'broadcastEvent) => 'state=?,
+  ~onCheckboxStateChange: (. 'CheckboxStateChangeEvent) => 'state=?,
+  ~onhashchange: (. 'hashchangeEvent) => 'state=?,
+  ~oninput: (. 'inputEvent) => 'state=?,
+  ~onRadioStateChange: (. 'RadioStateChangeEvent) => 'state=?,
+  ~onreadystatechange: (. 'readystatechangeEvent) => 'state=?,
+  ~onValueChange: (. 'ValueChangeEvent) => 'state=?,
+  ~oninvalid: (. 'invalidEvent) => 'state=?,
+  ~onlocalized: (. 'localizedEvent) => 'state=?,
+  ~onmessage: (. 'messageEvent) => 'state=?,
+  ~onopen: (. 'openEvent) => 'state=?,
+  ~onshow: (. 'showEvent) => 'state=?,
+
+  /* Hyperapp DOM lifecycle events:
+     https://github.com/jorgebucaran/hyperapp#lifecycle-events */
+
+  ~oncreate: (. Dom.element) => unit=?,
+  ~onupdate: (. Dom.element, Js.t({..})) => unit=?,
+  ~onremove: (. Dom.element, onDone) => unit=?,
+  ~ondestroy: (. Dom.element) => unit=?,
+
+  /* Hyperapp DOM node key: https://github.com/jorgebucaran/hyperapp#keys */
+
+  ~key: string=?,
+
   unit,
 ) => _ = "";
