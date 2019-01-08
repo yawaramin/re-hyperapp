@@ -6,25 +6,44 @@
     JSX support is implemented in the [ReactDOMRe] and [ReasonReact]
     modules. See the former for more details. Note that both of these
     modules {i should not} be used directly; their purpose is to provide
-    JSX support.
-
-    For capitalized elements in JSX (i.e. what React would call custom
-    components), the requirement is that the module which will be used as
-    a custom component implement a Hyperapp view function {i but} give it
-    the following shape:
-    [let make(~prop1, ..., ~propN, children) = ...;]. In other words some
-    number of named props and a final parameter for the (possible)
-    children. Usually the props will be [~state] and [~actions] because
-    that's what Hyperapp views expect. */
+    JSX support. */
 
 /** Virtual DOM elements. I.e. the things that get rendered by views. */
 type vdom;
-type t;
+
+/** Suggested type of a custom component (i.e. a capitalized JSX
+    element). This module type makes it possible to create higher-order
+    components using OCaml functors, by declaring the functors to accept
+    and return this type as input and output.
+
+    Strictly speaking, this exact type is not needed to support
+    capitalized elements in JSX (i.e. what React would call custom
+    components); at a minimum, the JSX transform just needs the
+    [children] last parameter (the [array(vdom)]), but usually you'll
+    want to pass in some states, props, and actions.
+
+    See also [ReasonReact] for more details on capitalized components. */
+module type Component = {
+  let make: (
+    ~state: Js.t({..}) as 'state,
+    ~actions: Js.t({..}) as 'actions,
+    ~props: Js.t({..}) as 'props=?,
+    array(vdom),
+  ) => vdom;
+};
+
 type element = Dom.element;
+
+/** A Hyperapp instance that can be mounted on the page. */
+type t;
+
+/* Helpers to inject basic values into vdom/JSX. */
 
 external string: string => vdom = "%identity";
 external int: int => vdom = "%identity";
 external float: float => vdom = "%identity";
+
+/* The following two helpers are mostly not needed thanks to JSX support. */
 
 /** [h(tagName, attrs, children)] creates a [vdom] element with tag name
     [tagName], attributes [attrs], and child elements [children]. This is
@@ -39,9 +58,9 @@ external h: (string, Js.t({..}), array(vdom)) => vdom = "";
 external h_: (string, [@bs.as {json|{}|json}] _, array(vdom)) => vdom = "h";
 
 /** [make(~state, ~actions, ~view, element)] creates a Hyperapp instance.
-    Most of the type safety of the overall app comes from the way this
-    function is typed: the view function must work with the state (model)
-    and actions. */
+    This is the main entry point to using this binding. Most of the type
+    safety of the overall app comes from the way this function is typed:
+    the view function must work with the state (model) and actions. */
 [@bs.module "hyperapp"] external make: (
   ~state: Js.t({..}) as 'state,
   ~actions: Js.t({..}) as 'actions,
