@@ -16,28 +16,30 @@ type vdom;
     components using OCaml functors, by declaring the functors to accept
     and return this type as input and output.
 
-    Strictly speaking, this exact type is not needed to support
-    capitalized elements in JSX (i.e. what React would call custom
-    components); at a minimum, the JSX transform just needs the
-    [children] last parameter (the [array(vdom)]), but usually you'll
-    want to pass in some states, props, and actions.
+    Strictly speaking, this exact type is not needed to support custom
+    elements in JSX; at a minimum, the JSX transform just needs the last
+    parameter ([children]), but usually you'll want to pass in some
+    states, props, and actions.
 
     See also [ReasonReact] for more details on capitalized components,
     and [Yawaramin_ReHyperapp_Demo_Component_BookList.rei] for an example
     of how to enforce this module type on any given component. */
 module type Component = {
-  /* These two really need to be JavaScript objects; that's what Hyperapp
-     expects. I haven't found a way to enforce that with types yet. */
-
   type state;
   type actions;
   type props;
 
-  let state: state;
-  let actions: actions;
+  /* Note that you'll need to define the [state] and [actions] types as
+     OCaml object types, but instantiate the below two values as
+     BuckleScript objects. See
+     [Yawaramin_ReHyperapp_Demo_Component_BookList.re] for more details. */
+
+  let state: Js.t(state);
+  let actions: Js.t(actions);
+
   let make: (
-    ~state: state,
-    ~actions: actions,
+    ~state: Js.t(state),
+    ~actions: Js.t(actions),
     ~props: props=?,
     array(vdom),
   ) => vdom;
