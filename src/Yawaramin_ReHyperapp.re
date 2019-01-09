@@ -22,12 +22,23 @@ type vdom;
     [children] last parameter (the [array(vdom)]), but usually you'll
     want to pass in some states, props, and actions.
 
-    See also [ReasonReact] for more details on capitalized components. */
+    See also [ReasonReact] for more details on capitalized components,
+    and [Yawaramin_ReHyperapp_Demo_Component_BookList.rei] for an example
+    of how to enforce this module type on any given component. */
 module type Component = {
+  /* These two really need to be JavaScript objects; that's what Hyperapp
+     expects. I haven't found a way to enforce that with types yet. */
+
+  type state;
+  type actions;
+  type props;
+
+  let state: state;
+  let actions: actions;
   let make: (
-    ~state: Js.t({..}) as 'state,
-    ~actions: Js.t({..}) as 'actions,
-    ~props: Js.t({..}) as 'props=?,
+    ~state: state,
+    ~actions: actions,
+    ~props: props=?,
     array(vdom),
   ) => vdom;
 };

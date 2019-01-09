@@ -9,13 +9,9 @@ type book = {.
 };
 
 type state = {. "value": option(array(book))};
-
 type actions = {. "set": (. array(book)) => state};
+type props = unit;
 
 let state = {"value": None};
-
-let actions = {
-  "set": (. books: array(book)) => {value: Some(books)},
-};
-
-let make(~state: state, ~actions: actions, _children) = <span></span>;
+let actions = {"set": (. books: array(book)) => {"value": Some(books)}};
+let make(~state, ~actions, ~props=(), _children) = <span></span>;
