@@ -1,7 +1,7 @@
 /** Hack to reuse Reason's built-in support for JSX. But it does mean
     that re-hyperapp and reason-react can't be used together (because of
-    the conflicting modules). That's probably not not a problem in
-    practice though.
+    the conflicting modules). That's probably not a problem in practice
+    though.
 
     See
     {{:https://reasonml.github.io/reason-react/docs/en/jsx}https://reasonml.github.io/reason-react/docs/en/jsx}

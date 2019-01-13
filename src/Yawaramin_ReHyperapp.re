@@ -78,7 +78,7 @@ external h_: (string, [@bs.as {json|{}|json}] _, array(vdom)) => vdom = "h";
   ~state: Js.t({..}) as 'state,
   ~actions: Js.t({..}) as 'actions,
   ~view: (. 'state, 'actions) => vdom,
-  element,
+  Js.nullable(element),
 ) => t = "app";
 
 /** Helper to get the DOM element that the [app] function needs to mount

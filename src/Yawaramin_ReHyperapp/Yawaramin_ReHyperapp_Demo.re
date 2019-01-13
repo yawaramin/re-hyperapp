@@ -22,6 +22,6 @@ let view(. state, actions) =
     <Component.BookList state={state##bookList} actions={actions##bookList} />
   </div>;
 
-Js.Nullable.bind(Hyperapp.getElementById("main"), (. main) =>
-  Hyperapp.make(~state, ~actions, ~view, main)
-);
+"main"
+|> Hyperapp.getElementById
+|> Hyperapp.make(~state, ~actions, ~view);
