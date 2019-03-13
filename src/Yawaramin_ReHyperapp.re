@@ -50,13 +50,13 @@ type element = Dom.element;
 /** A Hyperapp instance that can be mounted on the page. */
 type t;
 
-/* Helpers to inject basic values into vdom/JSX. */
+// Helpers to inject basic values into vdom/JSX.
 
 external string: string => vdom = "%identity";
 external int: int => vdom = "%identity";
 external float: float => vdom = "%identity";
 
-/* The following two helpers are mostly not needed thanks to JSX support. */
+// The following two helpers are mostly not needed thanks to JSX support.
 
 /** [h(tagName, attrs, children)] creates a [vdom] element with tag name
     [tagName], attributes [attrs], and child elements [children]. This is

@@ -11,7 +11,7 @@ let books:
     "description": string,
     "id": int,
     "title": string,
-    "status": Yawaramin_ReHyperapp_Demo_Domain_Status.t
+    "status": Demo_Domain_Status.t,
   }));
 
 let hold: int => Js.Promise.t(Js.Date.t);

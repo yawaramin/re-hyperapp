@@ -1,5 +1,5 @@
 {
-  "name": "re-hyperapp",
+  "name": "@yawaramin/re-hyperapp",
   "version": "0.0.1",
   "scripts": {
     "build": "parcel build index.html",

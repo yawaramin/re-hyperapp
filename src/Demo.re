@@ -2,8 +2,9 @@
     project. It's mostly the same as a normal Hyperapp project, just with
     more types. */
 
-module Component = Yawaramin_ReHyperapp_Demo_Component;
-module Domain = Yawaramin_ReHyperapp_Demo_Domain;
+module Api = Demo_Api;
+module Component = Demo_Component;
+module Domain = Demo_Domain;
 module Hyperapp = Yawaramin_ReHyperapp;
 
 let state = {

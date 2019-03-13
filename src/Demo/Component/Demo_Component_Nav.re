@@ -10,7 +10,7 @@ let actions = {
 let handleSearch(state, actions) = (. event) =>
   switch (event##which, event##target##value) {
   | (_, "") => state
-  | (13, query) => let action = actions##setQuery; action(. query)
+  | (13, query) => let setQuery = actions##setQuery; setQuery(. query)
   | _ => state
   };
 

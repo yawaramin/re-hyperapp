@@ -148,7 +148,7 @@ external createElement: (string, ~props: Js.t({..})=?, array(vdom)) => vdom = "h
   /* TODO: SVG attributes:
      https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute */
 
-  /* DOM events: https://developer.mozilla.org/en-US/docs/Web/Events */
+  // DOM events: https://developer.mozilla.org/en-US/docs/Web/Events
 
   ~oncached: (. 'cachedEvent) => 'state=?,
   ~onerror: (. 'errorEvent) => 'state=?,
@@ -262,7 +262,7 @@ external createElement: (string, ~props: Js.t({..})=?, array(vdom)) => vdom = "h
   ~onremove: (. element, onDone) => unit=?,
   ~ondestroy: (. element) => unit=?,
 
-  /* Hyperapp DOM node key: https://github.com/jorgebucaran/hyperapp#keys */
+  // Hyperapp DOM node key: https://github.com/jorgebucaran/hyperapp#keys
 
   ~key: string=?,
 

@@ -1,8 +1,12 @@
 {
-  "name": "re-hyperapp",
+  "name": "@yawaramin/re-hyperapp",
   "version": "0.1.0",
   "sources": [
-    {"dir": "src", "subdirs": true}
+    {
+      "dir": "src",
+      "subdirs": true,
+      "public": ["ReactDOMRe", "ReasonReact", "Yawaramin_ReHyperapp"]
+    }
   ],
   "package-specs": {
     "module": "es6",
