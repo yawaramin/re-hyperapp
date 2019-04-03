@@ -16,5 +16,9 @@
   "bs-dependencies": [
   ],
   "refmt": 3,
-  "reason": {"react-jsx": 2}
+  "reason": {"react-jsx": 2},
+  "warnings": {
+    "number": "+A-48",
+    "error": "+A-44-102"
+  }
 }

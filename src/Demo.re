@@ -2,27 +2,11 @@
     project. It's mostly the same as a normal Hyperapp project, just with
     more types. */
 
-module Api = Demo_Api;
 module Component = Demo_Component;
-module Domain = Demo_Domain;
-module Hyperapp = Yawaramin_ReHyperapp;
+module Hy = Yawaramin_ReHyperapp;
 
-let state = {
-  "nav": Component.Nav.state,
-  "bookList": Component.BookList.state,
-};
-
-let actions = {
-  "nav": Component.Nav.actions,
-  "bookList": Component.BookList.actions,
-};
-
+let state = {"main": Component.Main.state};
+let actions = {"main": Component.Main.actions};
 let view(. state, actions) =
-  <div>
-    <Component.Nav state={state##nav} actions={actions##nav} />
-    <Component.BookList state={state##bookList} actions={actions##bookList} />
-  </div>;
-
-"main"
-|> Hyperapp.getElementById
-|> Hyperapp.make(~state, ~actions, ~view);
+  <Component.Main state={state##main} actions={actions##main} />;
+let _ = "main" |> Hy.getElementById |> Hy.make(~state, ~actions, ~view);

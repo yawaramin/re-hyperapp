@@ -11,7 +11,7 @@ let books:
     "description": string,
     "id": int,
     "title": string,
-    "status": Demo_Domain_Status.t,
+    "status": [`held | `borrowed(Js.Date.t) | `quo],
   }));
 
 let hold: int => Js.Promise.t(Js.Date.t);
