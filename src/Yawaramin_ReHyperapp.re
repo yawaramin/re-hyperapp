@@ -45,6 +45,9 @@ module type Component = {
   ) => vdom;
 };
 
+/** Convenience component type for components without any props. */
+module type ProplessComponent = Component with type props = unit;
+
 type element = Dom.element;
 
 /** A Hyperapp instance that can be mounted on the page. */
