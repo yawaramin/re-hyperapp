@@ -8,5 +8,5 @@ module Hy = Yawaramin_ReHyperapp;
 let state = {"main": Component.Main.state};
 let actions = {"main": Component.Main.actions};
 let view(. state, actions) =
-  <Component.Main state={state##main} actions={actions##main} />;
+  <Component.Main state=state##main actions=actions##main />;
 let _ = "main" |> Hy.getElementById |> Hy.make(~state, ~actions, ~view);
