@@ -7,8 +7,4 @@
     [ref] attributes on capitalized elements in the JSX; they'll be
     ignored. To set a key, pass it using another attribute name, like
     [key'] and use that to set [key] in an {i uncapitalized} element. */
-let element(~key=?, ~ref=?, children) = {
-  ignore(key);
-  ignore(ref);
-  children;
-};
+let element(~key as _=?, ~ref as _=?, children) = children;

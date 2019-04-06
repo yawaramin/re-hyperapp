@@ -1,4 +1,4 @@
-/** (WIP) very minimalistic bindings to
+/** Lightweight bindings to
     {{:https://github.com/jorgebucaran/hyperapp}Hyperapp}. Hyperapp has a
     very tiny API surface and already has a well-defined architecture, so
     we just follow that.
@@ -11,15 +11,23 @@
 /** Virtual DOM elements. I.e. the things that get rendered by views. */
 type vdom;
 
-/** Suggested type of a custom component (i.e. a capitalized JSX
-    element). This module type makes it possible to create higher-order
-    components using OCaml functors, by declaring the functors to accept
-    and return this type as input and output.
+/** Type of a custom component (i.e. a capitalized JSX element). This
+    module type makes it possible to create higher-order components using
+    OCaml functors, by declaring the functors to accept and return this
+    type as input and output. Using this module type also enables the
+    compiler to infer better types for state and actions, and avoids
+    type errors caused by the value restriction on object types.
 
     Strictly speaking, this exact type is not needed to support custom
     elements in JSX; at a minimum, the JSX transform just needs the last
-    parameter ([children]), but usually you'll want to pass in some
-    states, props, and actions.
+    parameter ([children]), but usually you'll want to pass in state and
+    actions objects, because the first two parameters are how Hyperapp
+    threads state and actions through custom components.
+
+    Note that you'll need to define the [state] and [actions] types as
+    OCaml object types, but instantiate the below two values as
+    BuckleScript objects. See
+    [Yawaramin_ReHyperapp_Demo_Component_BookList.re] for more details.
 
     See also [ReasonReact] for more details on capitalized components,
     and [Yawaramin_ReHyperapp_Demo_Component_BookList.rei] for an example
@@ -29,35 +37,44 @@ module type Component = {
   type actions;
   type props;
 
-  /* Note that you'll need to define the [state] and [actions] types as
-     OCaml object types, but instantiate the below two values as
-     BuckleScript objects. See
-     [Yawaramin_ReHyperapp_Demo_Component_BookList.re] for more details. */
-
   let state: Js.t(state);
   let actions: Js.t(actions);
 
+  /** The parameter order in this definition is important–state and
+      actions need to come first. */
   let make: (
-    ~state: Js.t(state),
-    ~actions: Js.t(actions),
-    ~props: props=?,
+    ~state: Js.t(state)=?,
+    ~actions: Js.t(actions)=?,
+    ~props: props,
     array(vdom),
   ) => vdom;
 };
-
-/** Convenience component type for components without any props. */
-module type ProplessComponent = Component with type props = unit;
 
 type element = Dom.element;
 
 /** A Hyperapp instance that can be mounted on the page. */
 type t;
 
-// Helpers to inject basic values into vdom/JSX.
+/** [array(vdoms)] allows injecting an array of VDOM nodes into a
+    position where only a single one is expected. Hyperapp VDOM allows
+    using an array of elements anywhere a child element is expected, so
+    we don't really need fragments as such. */
+external array: array(vdom) => vdom = "%identity";
 
-external string: string => vdom = "%identity";
-external int: int => vdom = "%identity";
 external float: float => vdom = "%identity";
+external int: int => vdom = "%identity";
+
+/** [null] allows injecting 'nothing' into the VDOM. */
+[@bs.val] external null: vdom = "";
+
+/** [string(s)] allows injecting a string into the VDOM. */
+external string: string => vdom = "%identity";
+
+/** [empty()] allows creating empty JavaScript objects. These are useful
+    for components that don't have any props or state and need JS objects
+    that represent that. You can thus use `unit` as the [state] and
+    [actions] types of components which don't have state or actions. */
+[@bs.obj] external empty: unit => Js.t(unit) = "";
 
 // The following two helpers are mostly not needed thanks to JSX support.
 
@@ -71,7 +88,8 @@ external h: (string, Js.t({..}), array(vdom)) => vdom = "";
 /** [h_(tagName, children)] creates a [vdom] element like above but with
     no attributes. */
 [@bs.module "hyperapp"]
-external h_: (string, [@bs.as {json|{}|json}] _, array(vdom)) => vdom = "h";
+external h_: (string, [@bs.as {json|{}|json}] _, array(vdom)) => vdom =
+  "h";
 
 /** [make(~state, ~actions, ~view, element)] creates a Hyperapp instance.
     This is the main entry point to using this binding. Most of the type

@@ -7,6 +7,10 @@ module Hy = Yawaramin_ReHyperapp;
 
 let state = {"main": Component.Main.state};
 let actions = {"main": Component.Main.actions};
+
+/* Need to thread the parts of the toplevel state and actions into
+   components which need them */
 let view(. state, actions) =
-  <Component.Main state=state##main actions=actions##main />;
+  <Component.Main state=state##main actions=actions##main props=() />
+
 let _ = "main" |> Hy.getElementById |> Hy.make(~state, ~actions, ~view);
