@@ -1,6 +1,6 @@
 module Domain = Demo_Domain;
 module Hy = Yawaramin_ReHyperapp;
-include Hy.StaticComponent;
+include Hy.Component.Static;
 
 type props = Domain.book;
 

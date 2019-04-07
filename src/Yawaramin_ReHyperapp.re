@@ -11,65 +11,68 @@
 /** Virtual DOM elements. I.e. the things that get rendered by views. */
 type vdom;
 
-/** Type of a custom component (i.e. a capitalized JSX element). This
-    module type makes it possible to create higher-order components using
-    OCaml functors, by declaring the functors to accept and return this
-    type as input and output. Using this module type also enables the
-    compiler to infer better types for state and actions, and avoids
-    type errors caused by the value restriction on object types. I also
-    strongly recommend enforcing this module type as it will guide you
-    through the steps of creating the module--i.e. adding the required
-    types and values. See also [StaticComponent] for an easy way to
-    create stateless components.
-
-    Strictly speaking, this exact type is not needed to support custom
-    elements in JSX; at a minimum, the JSX transform just needs the last
-    parameter ([children]), but usually you'll want to pass in state and
-    actions objects, because the first two parameters are how Hyperapp
-    threads state and actions through custom components.
-
-    Note that you'll need to define the [state] and [actions] types as
-    OCaml object types, but instantiate the [state] and [actions] values
-    as BuckleScript objects. See
-    [Yawaramin_ReHyperapp_Demo_Component_BookList.re] for more details.
-
-    See also [ReasonReact] for more details on capitalized components,
-    and [Yawaramin_ReHyperapp_Demo_Component_BookList.rei] for an example
-    of how to enforce this module type on a file component. */
-module type Component = {
-  type state;
-  type actions;
-  type props;
-
-  let state: Js.t(state);
-  let actions: Js.t(actions);
-
-  /** The parameter order in this definition is important–state and
-      actions need to come first. */
-  let make: (
-    ~state: Js.t(state)=?,
-    ~actions: Js.t(actions)=?,
-    ~props: props,
-    array(vdom),
-  ) => vdom;
-};
-
 /** [empty()] allows creating empty JavaScript objects. These are useful
     for components that don't have any props or state and need JS objects
     that represent that. You can thus use `unit` as the [state] and
     [actions] types of components which don't have state or actions. */
 [@bs.obj] external empty: unit => Js.t(unit) = "";
 
-/** Helper module for creating static components. Include this module in
-    your component module for a head start. Static components here mean
-    components without state or actions. After including, you'll only
-    need to define the type of [props] and the [make] function. */
-module StaticComponent = {
-  type state = unit;
-  type actions = unit;
+/** Helpers for creating re-hyperapp components. */
+module Component = {
+  /** Type of a custom component (i.e. a capitalized JSX element). This
+      module type makes it possible to create higher-order components
+      using OCaml functors, by declaring the functors to accept and
+      return this type as input and output. Using this module type also
+      enables the compiler to infer better types for state and actions,
+      and avoids type errors caused by the value restriction on object
+      types. I also strongly recommend enforcing this module type as it
+      will guide you through the steps of creating the module--i.e.
+      adding the required types and values. See also [StaticComponent]
+      for an easy way to create stateless components.
 
-  let state = empty();
-  let actions = empty();
+      Strictly speaking, this exact type is not needed to support custom
+      elements in JSX; at a minimum, the JSX transform just needs the
+      last parameter ([children]), but usually you'll want to pass in
+      state and actions objects, because the first two parameters are how
+      Hyperapp threads state and actions through custom components.
+
+      Note that you'll need to define the [state] and [actions] types as
+      OCaml object types, but instantiate the [state] and [actions]
+      values as BuckleScript objects. See
+      [Yawaramin_ReHyperapp_Demo_Component_BookList.re] for more details.
+
+      See also [ReasonReact] for more details on capitalized components,
+      and [Yawaramin_ReHyperapp_Demo_Component_BookList.rei] for an
+      example of how to enforce this module type on a file component. */
+  module type Type = {
+    type state;
+    type actions;
+    type props;
+
+    let state: Js.t(state);
+    let actions: Js.t(actions);
+
+    /** The parameter order in this definition is important–state and
+        actions need to come first. */
+    let make: (
+      ~state: Js.t(state)=?,
+      ~actions: Js.t(actions)=?,
+      ~props: props,
+      array(vdom),
+    ) => vdom;
+  };
+
+  /** Helper module for creating static components. Include this module
+      in your component module for a head start. Static components here
+      mean components without state or actions. After including, you'll
+      only need to define the type of [props] and the [make] function. */
+  module Static = {
+    type state = unit;
+    type actions = unit;
+
+    let state = empty();
+    let actions = empty();
+  };
 };
 
 type element = Dom.element;

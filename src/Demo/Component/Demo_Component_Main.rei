@@ -1,1 +1,1 @@
-include Yawaramin_ReHyperapp.Component with type props = unit;
+include Yawaramin_ReHyperapp.Component.Type with type props = unit;

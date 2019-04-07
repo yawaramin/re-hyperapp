@@ -7,20 +7,17 @@ type state = {. tab, books: array(Domain.book)};
 type setTab = (. tab) => (. state) => {. "tab": tab};
 type actions = {. setTab};
 
-module Tab: Hy.Component with type props = {.
+type tabProps = {.
   "currTab": tab,
   "newTab": tab,
   "label": string,
   "setTab": setTab,
-} = {
-  include Hy.StaticComponent;
+};
 
-  type props = {.
-    "currTab": tab,
-    "newTab": tab,
-    "label": string,
-    "setTab": setTab,
-  };
+module Tab: Hy.Component.Type with type props = tabProps = {
+  include Hy.Component.Static;
+
+  type props = tabProps;
 
   let isActive(currTab, newTab) = if (currTab == newTab) "is-active" else "";
 
@@ -77,7 +74,7 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
             </p>
             <a _class="panel-block">
               <span _class="panel-icon">{Hy.string({j|🆕|j})}</span>
-              {Hy.string("New item")}
+              {Hy.string("Add New")}
             </a>
             {books}
           </nav>
