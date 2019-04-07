@@ -54,37 +54,45 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
     |> Array.map(book => <Book props=book />)
     |> Hy.array;
 
-  <div _class="container is-fluid">
-    <div _class="tile is-ancestor">
-      <div _class="tile is-4 is-parent">
-        <div _class="tile is-child">
-          <nav _class="panel">
-            <p _class="panel-heading">{Hy.string("My Library")}</p>
-            <div _class="panel-block">
-              <p _class="control has-icons-left">
-                <input _class="input is-small" _type="text" placeholder="Filter" />
-                <span _class="icon is-small is-left">{Hy.string({j|🔍|j})}</span>
-              </p>
-            </div>
-            <p _class="panel-tabs">
-              <Tab props=tabProps(~currTab=state##tab, ~newTab=All, ~label={j|📚 all|j}, ~setTab, ()) />
-              <Tab props=tabProps(~currTab=state##tab, ~newTab=ToRead, ~label={j|📘 to read|j}, ~setTab, ()) />
-              <Tab props=tabProps(~currTab=state##tab, ~newTab=Reading, ~label={j|📖 reading|j}, ~setTab, ()) />
-              <Tab props=tabProps(~currTab=state##tab, ~newTab=Read, ~label={j|📗 read|j}, ~setTab, ()) />
-            </p>
-            <a _class="panel-block">
-              <span _class="panel-icon">{Hy.string({j|🆕|j})}</span>
-              {Hy.string("Add New")}
-            </a>
-            {books}
-          </nav>
-        </div>
+  <section>
+    <nav _class="level">
+      <div _class="level-item has-text-centered">
+        <h1 style="margin-top: .75rem" _class="title">
+          {Hy.string({j|🏫 My Library|j})}
+        </h1>
       </div>
-      <div _class="tile is-parent">
-        <div _class="tile is-child box">
-          {Hy.string("Test!")}
+    </nav>
+    <div _class="container is-fluid">
+      <div _class="tile is-ancestor">
+        <div _class="tile is-4 is-parent">
+          <div _class="tile is-child">
+            <nav _class="panel">
+              <div _class="panel-block">
+                <p _class="control has-icons-left">
+                  <input _class="input is-small" _type="text" placeholder="Filter" />
+                  <span _class="icon is-small is-left">{Hy.string({j|🔍|j})}</span>
+                </p>
+              </div>
+              <p _class="panel-tabs">
+                <Tab props=tabProps(~currTab=state##tab, ~newTab=All, ~label={j|📚 all|j}, ~setTab, ()) />
+                <Tab props=tabProps(~currTab=state##tab, ~newTab=ToRead, ~label={j|📘 to read|j}, ~setTab, ()) />
+                <Tab props=tabProps(~currTab=state##tab, ~newTab=Reading, ~label={j|📖 reading|j}, ~setTab, ()) />
+                <Tab props=tabProps(~currTab=state##tab, ~newTab=Read, ~label={j|📗 read|j}, ~setTab, ()) />
+              </p>
+              <a _class="panel-block">
+                <span _class="panel-icon">{Hy.string({j|🆕|j})}</span>
+                {Hy.string("Add New")}
+              </a>
+              {books}
+            </nav>
+          </div>
+        </div>
+        <div _class="tile is-parent">
+          <div _class="tile is-child box">
+            {Hy.string("Test!")}
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>;
 };
