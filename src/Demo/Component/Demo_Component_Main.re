@@ -3,9 +3,16 @@ module Hy = Yawaramin_ReHyperapp;
 
 type tab = All | ToRead | Reading | Read;
 type props = unit;
-type state = {. tab, books: array(Domain.book)};
-type setTab = (. tab) => (. state) => {. "tab": tab};
-type actions = {. setTab};
+
+type state = {.
+  tab,
+  books: Js.Dict.t(Domain.book),
+  currBook: option(Domain.bookId),
+};
+
+type setTab = (. tab) => {. "tab": tab};
+type setCurrBook = (. Domain.bookId) => {. "currBook": option(Domain.bookId)};
+type actions = {. setTab, setCurrBook};
 
 type tabProps = {.
   "currTab": tab,
@@ -31,13 +38,17 @@ module Tab: Hy.Component.Type with type props = tabProps = {
 };
 
 // Dummy data
-let books = Domain.[|
-  {author: "J.R.R. Tolkien", available: 3, copies: 10, description: "The story of the fellowship of the races that overthrew the Dark Lord, and the great journey undertaken by two hobbits that made it possible.", id: 1, title: "The Lord of the Rings", status: `quo},
-  {author: "Mikhail Bulgakov", available: 2, copies: 2, description: "The Devil comes to Stalin-era Moscow and wreaks havoc with his retinue of demons, while the Master struggles to finish his life's work (the story of Yeshua Ha-Nozri), and Margarita seeks a way to break free from the shackles of society and be reunited with her love.", id: 2, title: "The Master and Margarita", status: `quo},
-|];
+let books = Js.Dict.fromArray(Domain.[|
+  ("1", {author: "J.R.R. Tolkien", available: 3, copies: 10, description: "The story of the fellowship of the races that overthrew the Dark Lord, and the great journey undertaken by two hobbits that made it possible.", id: "1", title: "The Lord of the Rings", status: `quo}),
+  ("2", {author: "Mikhail Bulgakov", available: 2, copies: 2, description: "The Devil comes to Stalin-era Moscow and wreaks havoc with his retinue of demons, while the Master struggles to finish his life's work (the story of Yeshua Ha-Nozri), and Margarita seeks a way to break free from the shackles of society and be reunited with her love.", id: "2", title: "The Master and Margarita", status: `quo}),
+|]);
 
-let state = {"tab": All, "books": books};
-let actions = {"setTab": (. tab) => (. _state) => {"tab": tab}};
+let state = {"tab": All, "books": books, "currBook": None};
+
+let actions = {
+  "setTab": (. tab) => {"tab": tab},
+  "setCurrBook": (. bookId) => {"currBook": Some(bookId)},
+};
 
 let tabProps(~currTab, ~newTab, ~label, ~setTab, ()) = {
   "currTab": currTab,
@@ -51,7 +62,13 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
 
   let setTab = actions##setTab;
   let books = state##books
-    |> Array.map(book => <Book props=book />)
+    |> Js.Dict.values
+    |> Array.map(book =>
+      <Book props={
+        "currBook": state##currBook,
+        "setCurrBook": actions##setCurrBook,
+        "book": book,
+      } />)
     |> Hy.array;
 
   <section>

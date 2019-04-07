@@ -1,4 +1,4 @@
-type bookId = int;
+type bookId = string;
 
 type book = {
   author: string,
