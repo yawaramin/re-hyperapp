@@ -16,7 +16,11 @@ type vdom;
     OCaml functors, by declaring the functors to accept and return this
     type as input and output. Using this module type also enables the
     compiler to infer better types for state and actions, and avoids
-    type errors caused by the value restriction on object types.
+    type errors caused by the value restriction on object types. I also
+    strongly recommend enforcing this module type as it will guide you
+    through the steps of creating the module--i.e. adding the required
+    types and values. See also [StaticComponent] for an easy way to
+    create stateless components.
 
     Strictly speaking, this exact type is not needed to support custom
     elements in JSX; at a minimum, the JSX transform just needs the last
@@ -25,13 +29,13 @@ type vdom;
     threads state and actions through custom components.
 
     Note that you'll need to define the [state] and [actions] types as
-    OCaml object types, but instantiate the below two values as
-    BuckleScript objects. See
+    OCaml object types, but instantiate the [state] and [actions] values
+    as BuckleScript objects. See
     [Yawaramin_ReHyperapp_Demo_Component_BookList.re] for more details.
 
     See also [ReasonReact] for more details on capitalized components,
     and [Yawaramin_ReHyperapp_Demo_Component_BookList.rei] for an example
-    of how to enforce this module type on any given component. */
+    of how to enforce this module type on a file component. */
 module type Component = {
   type state;
   type actions;
@@ -48,6 +52,24 @@ module type Component = {
     ~props: props,
     array(vdom),
   ) => vdom;
+};
+
+/** [empty()] allows creating empty JavaScript objects. These are useful
+    for components that don't have any props or state and need JS objects
+    that represent that. You can thus use `unit` as the [state] and
+    [actions] types of components which don't have state or actions. */
+[@bs.obj] external empty: unit => Js.t(unit) = "";
+
+/** Helper module for creating static components. Include this module in
+    your component module for a head start. Static components here mean
+    components without state or actions. After including, you'll only
+    need to define the type of [props] and the [make] function. */
+module StaticComponent = {
+  type state = unit;
+  type actions = unit;
+
+  let state = empty();
+  let actions = empty();
 };
 
 type element = Dom.element;
@@ -69,12 +91,6 @@ external int: int => vdom = "%identity";
 
 /** [string(s)] allows injecting a string into the VDOM. */
 external string: string => vdom = "%identity";
-
-/** [empty()] allows creating empty JavaScript objects. These are useful
-    for components that don't have any props or state and need JS objects
-    that represent that. You can thus use `unit` as the [state] and
-    [actions] types of components which don't have state or actions. */
-[@bs.obj] external empty: unit => Js.t(unit) = "";
 
 // The following two helpers are mostly not needed thanks to JSX support.
 
