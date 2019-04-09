@@ -23,13 +23,15 @@ let actions = {
   "setTitle": (. title) => {"title": title},
 };
 
+external (or): (option('a), 'a) => 'a = "%sequor";
+
 let make(~state as _=state, ~actions as _=actions, ~props, _children) = {
-  let book = props |> Js.Option.getWithDefault({
+  let book = props or {
     "author": "",
     "description": "",
     "id": "(None)",
     "title": "",
-  });
+  };
 
   <div _class="tile is-parent">
     <div _class="tile is-child box">
