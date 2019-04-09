@@ -23,21 +23,19 @@ let actions = {
   "setTitle": (. title) => {"title": title},
 };
 
-external (or): (option('a), 'a) => 'a = "%sequor";
-
 let make(~state as _=state, ~actions as _=actions, ~props, _children) = {
-  let book = props or {
+  let book = props |> Js.Option.getWithDefault({
     "author": "",
     "description": "",
     "id": "(None)",
     "title": "",
     "status": `ToRead,
-  };
+  });
 
   <div _class="tile is-parent">
     <div _class="tile is-child box">
       <div _class="field">
-        <label _class="label">{Hy.string({j|ℹ️ ID|j})}</label>
+        <label _class="label">{Hy.string("ID")}</label>
         <p _class="content">{Hy.string(book##id)}</p>
       </div>
       <div _class="field">
@@ -55,9 +53,7 @@ let make(~state as _=state, ~actions as _=actions, ~props, _children) = {
       <div _class="field">
         <label _class="label">{Hy.string({j|📝 Description|j})}</label>
         <div _class="control">
-          <textarea _class="textarea" placeholder="A nice description of the document">
-            {Hy.string(book##description)}
-          </textarea>
+          <textarea _class="textarea" placeholder="A nice description of the document" value=book##description />
         </div>
       </div>
     </div>
