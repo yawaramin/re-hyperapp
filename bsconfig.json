@@ -18,7 +18,7 @@
   "refmt": 3,
   "reason": {"react-jsx": 2},
   "warnings": {
-    "number": "+A-48-102",
+    "number": "+A-42-48-102",
     "error": "+A-3-44"
   }
 }

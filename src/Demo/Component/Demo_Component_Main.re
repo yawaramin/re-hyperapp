@@ -1,3 +1,4 @@
+module Detail = Demo_Component_Detail;
 module Domain = Demo_Domain;
 module Hy = Yawaramin_ReHyperapp;
 
@@ -6,13 +7,15 @@ type props = unit;
 
 type state = {.
   tab,
-  books: Js.Dict.t(Domain.book),
-  currBook: option(Domain.bookId),
+  books: Js.Dict.t(Domain.Book.t),
+  currBookId: option(Domain.Book.id),
+  detail: Js.t(Detail.state),
 };
 
 type setTab = (. tab) => {. "tab": tab};
-type setCurrBook = (. Domain.bookId) => {. "currBook": option(Domain.bookId)};
-type actions = {. setTab, setCurrBook};
+type setCurrBookId =
+  (. Domain.Book.id) => {. "currBookId": option(Domain.Book.id)};
+type actions = {. setTab, setCurrBookId, detail: Js.t(Detail.actions)};
 
 type tabProps = {.
   "currTab": tab,
@@ -38,16 +41,32 @@ module Tab: Hy.Component.Type with type props = tabProps = {
 };
 
 // Dummy data
-let books = Js.Dict.fromArray(Domain.[|
-  ("1", {author: "J.R.R. Tolkien", available: 3, copies: 10, description: "The story of the fellowship of the races that overthrew the Dark Lord, and the great journey undertaken by two hobbits that made it possible.", id: "1", title: "The Lord of the Rings", status: `quo}),
-  ("2", {author: "Mikhail Bulgakov", available: 2, copies: 2, description: "The Devil comes to Stalin-era Moscow and wreaks havoc with his retinue of demons, while the Master struggles to finish his life's work (the story of Yeshua Ha-Nozri), and Margarita seeks a way to break free from the shackles of society and be reunited with her love.", id: "2", title: "The Master and Margarita", status: `quo}),
+let books = Js.Dict.fromArray([|
+  ("1", {
+    "author": "J.R.R. Tolkien",
+    "description": "The story of the fellowship of the races that overthrew the Dark Lord, and the great journey undertaken by two hobbits that made it possible.",
+    "id": "1",
+    "title": "The Lord of the Rings",
+  }),
+  ("2", {
+    "author": "Mikhail Bulgakov",
+    "description": "The Devil comes to Stalin-era Moscow and wreaks havoc with his retinue of demons, while the Master struggles to finish his life's work (the story of Yeshua Ha-Nozri), and Margarita seeks a way to break free from the shackles of society and be reunited with her love.",
+    "id": "2",
+    "title": "The Master and Margarita",
+  }),
 |]);
 
-let state = {"tab": All, "books": books, "currBook": None};
+let state = {
+  "tab": All,
+  "books": books,
+  "currBookId": None,
+  "detail": Detail.state,
+};
 
 let actions = {
   "setTab": (. tab) => {"tab": tab},
-  "setCurrBook": (. bookId) => {"currBook": Some(bookId)},
+  "setCurrBookId": (. bookId) => {"currBookId": Some(bookId)},
+  "detail": Detail.actions,
 };
 
 let tabProps(~currTab, ~newTab, ~label, ~setTab, ()) = {
@@ -65,11 +84,13 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
     |> Js.Dict.values
     |> Array.map(book =>
       <Book props={
-        "currBook": state##currBook,
-        "setCurrBook": actions##setCurrBook,
+        "currBookId": state##currBookId,
+        "setCurrBookId": actions##setCurrBookId,
         "book": book,
       } />)
     |> Hy.array;
+  let currBook = state##currBookId |> Js.Option.andThen((. currBookId) =>
+    Js.Dict.get(state##books, currBookId));
 
   <section>
     <nav _class="level">
@@ -104,11 +125,7 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
             </nav>
           </div>
         </div>
-        <div _class="tile is-parent">
-          <div _class="tile is-child box">
-            {Hy.string("Test!")}
-          </div>
-        </div>
+        <Detail state=state##detail actions=actions##detail props=currBook />
       </div>
     </div>
   </section>;

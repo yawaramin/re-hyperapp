@@ -46,10 +46,26 @@ module Component = {
       example of how to enforce this module type on a file component. */
   module type Type = {
     type state;
+
+    /** Needs to be an OCaml object type with all fields of type:
+
+        [(. a) => {. "b": c, ...}]
+
+        or
+
+        [(. a) => (. Js.t(state)) => {. "b": c, ...}]
+
+        It's important that the functions are explicitly curried, all
+        take a payload (or more) as the first parameter, possibly take
+        the current state as the second curried parameter, and return a
+        JavaScript object type that is some subset of the state type.
+        Hyperapp will merge the new part of the state into the existing
+        state--no need for explicit immutable update syntax. */
     type actions;
     type props;
 
     let state: Js.t(state);
+
     let actions: Js.t(actions);
 
     /** The parameter order in this definition is important–state and
