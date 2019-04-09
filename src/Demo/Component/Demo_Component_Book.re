@@ -28,7 +28,7 @@ let make(~state as _=state, ~actions as _=actions, ~props, _children) = {
   };
 
   <a _class id key=id onclick>
-    <span _class="panel-icon">{Hy.string({j|📖|j})}</span>
+    <span _class="panel-icon">{book##status |> Domain.Status.toEmoji |> Hy.string}</span>
     {Hy.string(book##title ++ desc)}
   </a>;
 };
