@@ -2,21 +2,18 @@ module Detail = Demo_Component_Detail;
 module Domain = Demo_Domain;
 module Hy = Yawaramin_ReHyperapp;
 
-type tab = All | ToRead | Reading | Read;
 type props = unit;
-
+type tab = [Domain.Book.status | `All];
 type state = {.
   tab,
   books: Js.Dict.t(Domain.Book.t),
   currBookId: option(Domain.Book.id),
   detail: Js.t(Detail.state),
 };
-
 type setTab = (. tab) => {. "tab": tab};
 type setCurrBookId =
   (. Domain.Book.id) => {. "currBookId": option(Domain.Book.id)};
 type actions = {. setTab, setCurrBookId, detail: Js.t(Detail.actions)};
-
 type tabProps = {.
   "currTab": tab,
   "newTab": tab,
@@ -47,17 +44,19 @@ let books = Js.Dict.fromArray([|
     "description": "The story of the fellowship of the races that overthrew the Dark Lord, and the great journey undertaken by two hobbits that made it possible.",
     "id": "1",
     "title": "The Lord of the Rings",
+    "status": `ToRead,
   }),
   ("2", {
     "author": "Mikhail Bulgakov",
     "description": "The Devil comes to Stalin-era Moscow and wreaks havoc with his retinue of demons, while the Master struggles to finish his life's work (the story of Yeshua Ha-Nozri), and Margarita seeks a way to break free from the shackles of society and be reunited with her love.",
     "id": "2",
     "title": "The Master and Margarita",
+    "status": `ToRead,
   }),
 |]);
 
 let state = {
-  "tab": All,
+  "tab": `All,
   "books": books,
   "currBookId": None,
   "detail": Detail.state,
@@ -112,10 +111,10 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
                 </p>
               </div>
               <p _class="panel-tabs">
-                <Tab props=tabProps(~currTab=state##tab, ~newTab=All, ~label={j|📚 all|j}, ~setTab, ()) />
-                <Tab props=tabProps(~currTab=state##tab, ~newTab=ToRead, ~label={j|📘 to read|j}, ~setTab, ()) />
-                <Tab props=tabProps(~currTab=state##tab, ~newTab=Reading, ~label={j|📖 reading|j}, ~setTab, ()) />
-                <Tab props=tabProps(~currTab=state##tab, ~newTab=Read, ~label={j|📗 read|j}, ~setTab, ()) />
+                <Tab props=tabProps(~currTab=state##tab, ~newTab=`All, ~label={j|📚 all|j}, ~setTab, ()) />
+                <Tab props=tabProps(~currTab=state##tab, ~newTab=`ToRead, ~label={j|📘 to read|j}, ~setTab, ()) />
+                <Tab props=tabProps(~currTab=state##tab, ~newTab=`Reading, ~label={j|📖 reading|j}, ~setTab, ()) />
+                <Tab props=tabProps(~currTab=state##tab, ~newTab=`Read, ~label={j|📗 read|j}, ~setTab, ()) />
               </p>
               <a _class="panel-block">
                 <span _class="panel-icon">{Hy.string({j|🆕|j})}</span>

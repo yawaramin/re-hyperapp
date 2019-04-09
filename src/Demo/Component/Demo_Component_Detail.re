@@ -31,12 +31,13 @@ let make(~state as _=state, ~actions as _=actions, ~props, _children) = {
     "description": "",
     "id": "(None)",
     "title": "",
+    "status": `ToRead,
   };
 
   <div _class="tile is-parent">
     <div _class="tile is-child box">
       <div _class="field">
-        <label _class="label">{Hy.string("ID")}</label>
+        <label _class="label">{Hy.string({j|ℹ️ ID|j})}</label>
         <p _class="content">{Hy.string(book##id)}</p>
       </div>
       <div _class="field">
