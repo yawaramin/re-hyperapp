@@ -14,12 +14,7 @@ type setTab = (. tab) => {. "tab": tab};
 type setCurrBookId =
   (. Domain.Book.id) => {. "currBookId": option(Domain.Book.id)};
 type actions = {. setTab, setCurrBookId, detail: Js.t(Detail.actions)};
-type tabProps = {.
-  "currTab": tab,
-  "newTab": tab,
-  "label": string,
-  "setTab": setTab,
-};
+type tabProps = {. "currTab": tab, "newTab": tab, "setTab": setTab};
 
 module Tab: Hy.Component.Type with type props = tabProps = {
   include Hy.Component.Static;
@@ -33,7 +28,7 @@ module Tab: Hy.Component.Type with type props = tabProps = {
     let setTab = props##setTab;
 
     <a _class=isActive(props##currTab, newTab) onclick={(. _event) => setTab(. newTab)}>
-      {Hy.string(Domain.Status.toEmoji(newTab) ++ " " ++ props##label)}
+      {Hy.string(Domain.Status.(toEmoji(newTab) ++ " " ++ toString(newTab)))}
     </a>;
   };
 };
@@ -69,10 +64,9 @@ let actions = {
   "detail": Detail.actions,
 };
 
-let tabProps(~currTab, ~newTab, ~label, ~setTab, ()) = {
+let tabProps(~currTab, ~newTab, ~setTab, ()) = {
   "currTab": currTab,
   "newTab": newTab,
-  "label": label,
   "setTab": setTab,
 };
 
@@ -112,10 +106,10 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
                 </p>
               </div>
               <p _class="panel-tabs">
-                <Tab props=tabProps(~currTab=state##tab, ~newTab=`All, ~label="all", ~setTab, ()) />
-                <Tab props=tabProps(~currTab=state##tab, ~newTab=`ToRead, ~label="to read", ~setTab, ()) />
-                <Tab props=tabProps(~currTab=state##tab, ~newTab=`Reading, ~label="reading", ~setTab, ()) />
-                <Tab props=tabProps(~currTab=state##tab, ~newTab=`Read, ~label="read", ~setTab, ()) />
+                <Tab props=tabProps(~currTab=state##tab, ~newTab=`All, ~setTab, ()) />
+                <Tab props=tabProps(~currTab=state##tab, ~newTab=`ToRead, ~setTab, ()) />
+                <Tab props=tabProps(~currTab=state##tab, ~newTab=`Reading, ~setTab, ()) />
+                <Tab props=tabProps(~currTab=state##tab, ~newTab=`Read, ~setTab, ()) />
               </p>
               <a _class="panel-block">
                 <span _class="panel-icon">{Hy.string({j|🆕|j})}</span>

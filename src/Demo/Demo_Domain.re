@@ -6,6 +6,12 @@ module Status = {
     | `Reading => {j|📖|j}
     | `Read => {j|📗|j}
     | `All => {j|📚|j};
+
+  let toString = fun
+    | `ToRead => "to read"
+    | `Reading => "reading"
+    | `Read => "read"
+    | `All => "all";
 };
 
 module Book = {
