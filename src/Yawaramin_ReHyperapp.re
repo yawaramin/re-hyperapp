@@ -25,10 +25,10 @@ module Component = {
       return this type as input and output. Using this module type also
       enables the compiler to infer better types for state and actions,
       and avoids type errors caused by the value restriction on object
-      types. I also strongly recommend enforcing this module type as it
-      will guide you through the steps of creating the module--i.e.
-      adding the required types and values. See also [StaticComponent]
-      for an easy way to create stateless components.
+      types. I strongly recommend enforcing this module type as it will
+      guide you through the steps of creating the module--i.e. adding the
+      required types and values. See also [StaticComponent] for an easy
+      way to create stateless (and actionaless) components.
 
       Strictly speaking, this exact type is not needed to support custom
       elements in JSX; at a minimum, the JSX transform just needs the
@@ -36,14 +36,14 @@ module Component = {
       state and actions objects, because the first two parameters are how
       Hyperapp threads state and actions through custom components.
 
-      Note that you'll need to define the [state] and [actions] types as
-      OCaml object types, but instantiate the [state] and [actions]
-      values as BuckleScript objects. See
-      [Yawaramin_ReHyperapp_Demo_Component_BookList.re] for more details.
+      Note that you'll need to define the [state] and [actions] {i types}
+      as OCaml object types, but instantiate the [state] and [actions]
+      {i values} as BuckleScript objects. See
+      [Yawaramin_ReHyperapp_Demo_Component_Main.re] for more details.
 
       See also [ReasonReact] for more details on capitalized components,
-      and [Yawaramin_ReHyperapp_Demo_Component_BookList.rei] for an
-      example of how to enforce this module type on a file component. */
+      and [Yawaramin_ReHyperapp_Demo_Component_Main.rei] for an example
+      of how to enforce this module type on a file component. */
   module type Type = {
     type state;
 
@@ -62,14 +62,22 @@ module Component = {
         Hyperapp will merge the new part of the state into the existing
         state--no need for explicit immutable update syntax. */
     type actions;
+
+    /** This can be any type but when you want to pass multiple values in
+        the props, it's useful to make it a JavaScript object type
+        because that can be independently defined and used interoperably
+        across modules with no risk of cyclic dependencies. */
     type props;
 
+    /** The {i initial} state of the component. */
     let state: Js.t(state);
 
+    /** Initial actions of the component. */
     let actions: Js.t(actions);
 
     /** The parameter order in this definition is important–state and
-        actions need to come first. */
+        actions need to come first--because that's the order that
+        Hyperapp uses. */
     let make: (
       ~state: Js.t(state)=?,
       ~actions: Js.t(actions)=?,
