@@ -7,6 +7,7 @@ type props = {.
   "setCurrBookId":
     (. Domain.Book.id) => {. "currBookId": option(Domain.Book.id)},
   "book": Domain.Book.t,
+  "resetDetail": (. unit) => Js.t(Demo_Component_Detail.state),
 };
 
 let make(~state as _=state, ~actions as _=actions, ~props, _children) = {
@@ -19,8 +20,13 @@ let make(~state as _=state, ~actions as _=actions, ~props, _children) = {
   };
 
   let id = "item-" ++ bookId;
-  let setCurrBookId = props##setCurrBookId;
-  let onclick = (. _event) => setCurrBookId(. bookId);
+  let onclick = (. _event) => {
+    let setCurrBookId = props##setCurrBookId;
+    let resetDetail = props##resetDetail;
+
+    resetDetail(.);
+    setCurrBookId(. bookId);
+  };
 
   let desc = {
     let author = book##author;

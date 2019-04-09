@@ -81,6 +81,7 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
         "currBookId": state##currBookId,
         "setCurrBookId": actions##setCurrBookId,
         "book": book,
+        "resetDetail": actions##detail##reset,
       } />)
     |> Hy.array;
   let currBook = state##currBookId |> Js.Option.andThen((. currBookId) =>

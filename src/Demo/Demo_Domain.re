@@ -1,6 +1,12 @@
 module Status = {
   type t = [`ToRead | `Reading | `Read];
 
+  let fromString = fun
+    | "to read" => Some(`ToRead)
+    | "reading" => Some(`Reading)
+    | "read" => Some(`Read)
+    | _ => None;
+
   let toEmoji = fun
     | `ToRead => {j|📘|j}
     | `Reading => {j|📖|j}

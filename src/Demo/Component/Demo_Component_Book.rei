@@ -5,4 +5,5 @@ include Yawaramin_ReHyperapp.Component.Type with type props = {.
   "setCurrBookId":
     (. Domain.Book.id) => {. "currBookId": option(Domain.Book.id)},
   "book": Domain.Book.t,
+  "resetDetail": (. unit) => Js.t(Demo_Component_Detail.state),
 };
