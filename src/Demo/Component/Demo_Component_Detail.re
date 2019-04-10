@@ -1,6 +1,25 @@
 module Hy = Yawaramin_ReHyperapp;
 module Domain = Demo_Domain;
 
+type optionProps = {.
+  "status": Domain.Status.t,
+  "currStatus": Domain.Status.t,
+};
+
+module Option: Hy.Component.Type with type props = optionProps = {
+  include Hy.Component.Static;
+
+  type props = optionProps;
+
+  let make(~state as _=?, ~actions as _=?, ~props, _children) = {
+    let status = props##status;
+
+    <option selected={status == props##currStatus}>
+      {status |> Domain.Status.toString |> Hy.string}
+    </option>;
+  };
+};
+
 type state = {.
   author: option(string),
   description: option(string),
@@ -40,10 +59,12 @@ let make(~state=state, ~actions=actions, ~props, _children) = {
   let description = state##description or Js.Option.map((. book) => book##description, props) or "";
   let id = Js.Option.map((. book) => book##id, props) or "(None)";
   let title = state##title or Js.Option.map((. book) => book##title, props) or "";
-  let _status = state##status or Js.Option.map((. book) => book##status, props) or `ToRead;
+  let status = state##status or Js.Option.map((. book) => book##status, props) or `ToRead;
   let setAuthor = actions##setAuthor;
   let setDescription = actions##setDescription;
   let setTitle = actions##setTitle;
+  let setStatus = actions##setStatus;
+  let statusEmoji = status |> Domain.Status.toEmoji |> Hy.string;
 
   <div _class="tile is-parent">
     <div _class="tile is-child box">
@@ -86,11 +107,13 @@ let make(~state=state, ~actions=actions, ~props, _children) = {
         <label _class="label">{Hy.string({j|📚 Status|j})}</label>
         <div _class="control has-icons-left">
           <div _class="select">
-            <select>
-              <option selected=true>{Hy.string("read")}</option>
+            <select onchange={(. event) => setStatus(. event##target##value)}>
+              <Option props={"status": `ToRead, "currStatus": status} />
+              <Option props={"status": `Reading, "currStatus": status} />
+              <Option props={"status": `Read, "currStatus": status} />
             </select>
           </div>
-          <span _class="icon is-left">{Hy.string({j|📗|j})}</span>
+          <span _class="icon is-left">{statusEmoji}</span>
         </div>
       </div>
     </div>
