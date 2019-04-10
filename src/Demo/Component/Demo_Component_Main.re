@@ -11,9 +11,13 @@ type state = {.
   detail: Js.t(Detail.state),
 };
 type setTab = (. tab) => {. "tab": tab};
-type setCurrBookId =
-  (. Domain.Book.id) => {. "currBookId": option(Domain.Book.id)};
-type actions = {. setTab, setCurrBookId, detail: Js.t(Detail.actions)};
+type actions = {.
+  setTab,
+  setCurrBookId:
+    (. Domain.Book.id) => {. "currBookId": option(Domain.Book.id)},
+  addNew: (. unit) => {. "currBookId": option(Domain.Book.id)},
+  detail: Js.t(Detail.actions),
+};
 type tabProps = {. "currTab": tab, "newTab": tab, "setTab": setTab};
 
 module Tab: Hy.Component.Type with type props = tabProps = {
@@ -61,6 +65,7 @@ let state = {
 let actions = {
   "setTab": (. tab) => {"tab": tab},
   "setCurrBookId": (. bookId) => {"currBookId": Some(bookId)},
+  "addNew": (.) => {"currBookId": None},
   "detail": Detail.actions,
 };
 
@@ -82,7 +87,6 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
   module Book = Demo_Component_Book;
 
   let currTab = state##tab;
-  let setTab = actions##setTab;
   let books = state##books
     |> Js.Dict.values
     |> Js.Array.filter(showFor(currTab))
@@ -96,6 +100,8 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
     |> Hy.array;
   let currBook = state##currBookId |> Js.Option.andThen((. currBookId) =>
     Js.Dict.get(state##books, currBookId));
+  let setTab = actions##setTab;
+  let addNew = actions##addNew;
 
   <section>
     <nav _class="level">
@@ -122,7 +128,7 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
                 <Tab props=tabProps(~currTab, ~newTab=`Reading, ~setTab, ()) />
                 <Tab props=tabProps(~currTab, ~newTab=`Read, ~setTab, ()) />
               </p>
-              <a _class="panel-block">
+              <a _class="panel-block" onclick={(. _event) => addNew(.)}>
                 <span _class="panel-icon">{Hy.string({j|🆕|j})}</span>
                 {Hy.string("Add New")}
               </a>
