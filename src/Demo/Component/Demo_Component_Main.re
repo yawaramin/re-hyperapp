@@ -23,7 +23,7 @@ module Tab: Hy.Component.Type with type props = tabProps = {
 
   let isActive(currTab, newTab) = if (currTab == newTab) "is-active" else "";
 
-  let make(~state as _=state, ~actions as _=actions, ~props, _) = {
+  let make(~state as _=?, ~actions as _=?, ~props, _) = {
     let newTab = props##newTab;
     let setTab = props##setTab;
 

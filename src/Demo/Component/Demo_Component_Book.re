@@ -10,7 +10,7 @@ type props = {.
   "resetDetail": (. unit) => Js.t(Demo_Component_Detail.state),
 };
 
-let make(~state as _=state, ~actions as _=actions, ~props, _children) = {
+let make(~state as _=?, ~actions as _=?, ~props, _children) = {
   let book = props##book;
   let bookId = book##id;
 
