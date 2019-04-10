@@ -87,21 +87,26 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
   module Book = Demo_Component_Book;
 
   let currTab = state##tab;
+  let currBookId = state##currBookId;
   let books = state##books
     |> Js.Dict.values
     |> Js.Array.filter(showFor(currTab))
     |> Js.Array.map(book =>
       <Book props={
-        "currBookId": state##currBookId,
+        "currBookId": currBookId,
         "setCurrBookId": actions##setCurrBookId,
         "book": book,
         "resetDetail": actions##detail##reset,
       } />)
     |> Hy.array;
-  let currBook = state##currBookId |> Js.Option.andThen((. currBookId) =>
+  let currBook = currBookId |> Js.Option.andThen((. currBookId) =>
     Js.Dict.get(state##books, currBookId));
   let setTab = actions##setTab;
   let addNew = actions##addNew;
+  let addNewClass = "panel-block" ++ switch (currBookId) {
+    | Some(_) => ""
+    | None => " is-active"
+  };
 
   <section>
     <nav _class="level">
@@ -128,7 +133,7 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
                 <Tab props=tabProps(~currTab, ~newTab=`Reading, ~setTab, ()) />
                 <Tab props=tabProps(~currTab, ~newTab=`Read, ~setTab, ()) />
               </p>
-              <a _class="panel-block" onclick={(. _event) => addNew(.)}>
+              <a _class=addNewClass onclick={(. _event) => addNew(.)}>
                 <span _class="panel-icon">{Hy.string({j|🆕|j})}</span>
                 {Hy.string("Add New")}
               </a>
