@@ -64,6 +64,14 @@ let actions = {
   "detail": Detail.actions,
 };
 
+let showFor(currTab, book) = switch (currTab, book##status) {
+  | (`All, _)
+  | (`ToRead, `ToRead)
+  | (`Reading, `Reading)
+  | (`Read, `Read) => true
+  | _ => false
+};
+
 let tabProps(~currTab, ~newTab, ~setTab, ()) = {
   "currTab": currTab,
   "newTab": newTab,
@@ -73,10 +81,12 @@ let tabProps(~currTab, ~newTab, ~setTab, ()) = {
 let make(~state=state, ~actions=actions, ~props as _, _) = {
   module Book = Demo_Component_Book;
 
+  let currTab = state##tab;
   let setTab = actions##setTab;
   let books = state##books
     |> Js.Dict.values
-    |> Array.map(book =>
+    |> Js.Array.filter(showFor(currTab))
+    |> Js.Array.map(book =>
       <Book props={
         "currBookId": state##currBookId,
         "setCurrBookId": actions##setCurrBookId,
@@ -107,10 +117,10 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
                 </p>
               </div>
               <p _class="panel-tabs">
-                <Tab props=tabProps(~currTab=state##tab, ~newTab=`All, ~setTab, ()) />
-                <Tab props=tabProps(~currTab=state##tab, ~newTab=`ToRead, ~setTab, ()) />
-                <Tab props=tabProps(~currTab=state##tab, ~newTab=`Reading, ~setTab, ()) />
-                <Tab props=tabProps(~currTab=state##tab, ~newTab=`Read, ~setTab, ()) />
+                <Tab props=tabProps(~currTab, ~newTab=`All, ~setTab, ()) />
+                <Tab props=tabProps(~currTab, ~newTab=`ToRead, ~setTab, ()) />
+                <Tab props=tabProps(~currTab, ~newTab=`Reading, ~setTab, ()) />
+                <Tab props=tabProps(~currTab, ~newTab=`Read, ~setTab, ()) />
               </p>
               <a _class="panel-block">
                 <span _class="panel-icon">{Hy.string({j|🆕|j})}</span>
