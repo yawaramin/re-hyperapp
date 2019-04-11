@@ -29,9 +29,11 @@ module Tab: Hy.Component.Type with type props = tabProps = {
 
   let make(~state as _=?, ~actions as _=?, ~props, _) = {
     let newTab = props##newTab;
-    let setTab = props##setTab;
 
-    <a _class=isActive(props##currTab, newTab) onclick={(. _event) => setTab(. newTab)}>
+    <a
+      _class=isActive(props##currTab, newTab)
+      onclick={(. _event) =>
+        Hy.exec(props##setTab, action => action(. newTab))}>
       {Hy.string(Domain.Status.(toEmoji(newTab) ++ " " ++ toString(newTab)))}
     </a>;
   };
@@ -88,8 +90,6 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
 
   let currTab = state##tab;
   let currBookId = state##currBookId;
-  let setCurrBookId = actions##setCurrBookId;
-  let resetDetail = actions##detail##reset;
   let books = state##books
     |> Js.Dict.values
     |> Js.Array.filter(showFor(currTab))
@@ -98,15 +98,14 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
         "currBookId": currBookId,
         "book": book,
         "onSelect": (. bookId) => {
-          ignore(setCurrBookId(. bookId));
-          ignore(resetDetail(.));
+          Hy.exec(actions##setCurrBookId, action => action(. bookId));
+          Hy.exec(actions##detail##reset, action => action(.));
         },
       } />)
     |> Hy.array;
   let currBook = currBookId |> Js.Option.andThen((. currBookId) =>
     Js.Dict.get(state##books, currBookId));
   let setTab = actions##setTab;
-  let addNew = actions##addNew;
   let addNewClass = "panel-block" ++ switch (currBookId) {
     | Some(_) => ""
     | None => " is-active"
@@ -137,7 +136,10 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
                 <Tab props=tabProps(~currTab, ~newTab=`Reading, ~setTab, ()) />
                 <Tab props=tabProps(~currTab, ~newTab=`Read, ~setTab, ()) />
               </p>
-              <a _class=addNewClass onclick={(. _event) => addNew(.)}>
+              <a
+                _class=addNewClass
+                onclick={(. _event) =>
+                  Hy.exec(actions##addNew, action => action(.))}>
                 <span _class="panel-icon">{Hy.string({j|🆕|j})}</span>
                 {Hy.string("Add New")}
               </a>

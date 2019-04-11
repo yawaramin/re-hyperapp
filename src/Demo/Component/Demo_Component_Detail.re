@@ -60,10 +60,6 @@ let make(~state=state, ~actions=actions, ~props, _children) = {
   let id = Js.Option.map((. book) => book##id, props) or "(New)";
   let title = state##title or Js.Option.map((. book) => book##title, props) or "";
   let status = state##status or Js.Option.map((. book) => book##status, props) or `ToRead;
-  let setAuthor = actions##setAuthor;
-  let setDescription = actions##setDescription;
-  let setTitle = actions##setTitle;
-  let setStatus = actions##setStatus;
   let statusEmoji = status |> Domain.Status.toEmoji |> Hy.string;
 
   <div _class="tile is-parent">
@@ -79,7 +75,9 @@ let make(~state=state, ~actions=actions, ~props, _children) = {
             _class="input"
             _type="text"
             value=title
-            onblur={(. event) => setTitle(. event##target##value)} />
+            onblur={(. event) =>
+              Hy.exec(actions##setTitle, action =>
+                action(. event##target##value))} />
         </div>
       </div>
       <div _class="field">
@@ -90,7 +88,9 @@ let make(~state=state, ~actions=actions, ~props, _children) = {
             _type="text"
             placeholder="Joe Q. Author"
             value=author
-            onblur={(. event) => setAuthor(. event##target##value)} />
+            onblur={(. event) =>
+              Hy.exec(actions##setAuthor, action =>
+                action(. event##target##value))} />
         </div>
       </div>
       <div _class="field">
@@ -100,14 +100,18 @@ let make(~state=state, ~actions=actions, ~props, _children) = {
             _class="textarea"
             placeholder="A nice description of the document"
             value=description
-            onblur={(. event) => setDescription(. event##target##value)} />
+            onblur={(. event) =>
+              Hy.exec(actions##setDescription, action =>
+                action(. event##target##value))} />
         </div>
       </div>
       <div _class="field">
         <label _class="label">{Hy.string({j|📚 Status|j})}</label>
         <div _class="control has-icons-left">
           <div _class="select">
-            <select onchange={(. event) => setStatus(. event##target##value)}>
+            <select onchange={(. event) =>
+              Hy.exec(actions##setStatus, action =>
+                action(. event##target##value))}>
               <Option props={"status": `ToRead, "currStatus": status} />
               <Option props={"status": `Reading, "currStatus": status} />
               <Option props={"status": `Read, "currStatus": status} />

@@ -113,6 +113,11 @@ external array: array(vdom) => vdom = "%identity";
 external float: float => vdom = "%identity";
 external int: int => vdom = "%identity";
 
+/** [exec(action, func)] carries out the given Hyperapp [action] by
+    feeding it to the [func] callback, and discards the result. Meant to
+    be used in event handlers. */
+let exec(action, func) = action |> func |> ignore;
+
 /** [null] allows injecting 'nothing' into the VDOM. */
 [@bs.val] external null: vdom = "";
 

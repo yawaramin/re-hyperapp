@@ -10,7 +10,6 @@ type props = {.
 
 let make(~state as _=?, ~actions as _=?, ~props, _children) = {
   let book = props##book;
-  let onSelect = props##onSelect;
   let bookId = book##id;
 
   let _class = "panel-block" ++ switch (props##currBookId) {
@@ -24,7 +23,11 @@ let make(~state as _=?, ~actions as _=?, ~props, _children) = {
     if (author == "") "" else {j| · $author|j};
   };
 
-  <a _class id key=id onclick={(. _event) => onSelect(. bookId)}>
+  <a _class
+    id
+    key=id
+    onclick={(. _event) =>
+      Hy.exec(props##onSelect, action => action(. bookId))}>
     <span _class="panel-icon">
       {book##status |> Domain.Status.toEmoji |> Hy.string}
     </span>
