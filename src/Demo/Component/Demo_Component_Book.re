@@ -4,14 +4,13 @@ include Hy.Component.Static;
 
 type props = {.
   "currBookId": option(Domain.Book.id),
-  "setCurrBookId":
-    (. Domain.Book.id) => {. "currBookId": option(Domain.Book.id)},
   "book": Domain.Book.t,
-  "resetDetail": (. unit) => Js.t(Demo_Component_Detail.state),
+  "onSelect": (. Domain.Book.id) => unit,
 };
 
 let make(~state as _=?, ~actions as _=?, ~props, _children) = {
   let book = props##book;
+  let onSelect = props##onSelect;
   let bookId = book##id;
 
   let _class = "panel-block" ++ switch (props##currBookId) {
@@ -20,21 +19,15 @@ let make(~state as _=?, ~actions as _=?, ~props, _children) = {
   };
 
   let id = "item-" ++ bookId;
-  let onclick = (. _event) => {
-    let setCurrBookId = props##setCurrBookId;
-    let resetDetail = props##resetDetail;
-
-    resetDetail(.);
-    setCurrBookId(. bookId);
-  };
-
   let desc = {
     let author = book##author;
     if (author == "") "" else {j| · $author|j};
   };
 
-  <a _class id key=id onclick>
-    <span _class="panel-icon">{book##status |> Domain.Status.toEmoji |> Hy.string}</span>
+  <a _class id key=id onclick={(. _event) => onSelect(. bookId)}>
+    <span _class="panel-icon">
+      {book##status |> Domain.Status.toEmoji |> Hy.string}
+    </span>
     {Hy.string(book##title ++ desc)}
   </a>;
 };

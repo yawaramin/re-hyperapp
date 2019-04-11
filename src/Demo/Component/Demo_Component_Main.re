@@ -88,15 +88,19 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
 
   let currTab = state##tab;
   let currBookId = state##currBookId;
+  let setCurrBookId = actions##setCurrBookId;
+  let resetDetail = actions##detail##reset;
   let books = state##books
     |> Js.Dict.values
     |> Js.Array.filter(showFor(currTab))
     |> Js.Array.map(book =>
       <Book props={
         "currBookId": currBookId,
-        "setCurrBookId": actions##setCurrBookId,
         "book": book,
-        "resetDetail": actions##detail##reset,
+        "onSelect": (. bookId) => {
+          ignore(setCurrBookId(. bookId));
+          ignore(resetDetail(.));
+        },
       } />)
     |> Hy.array;
   let currBook = currBookId |> Js.Option.andThen((. currBookId) =>
