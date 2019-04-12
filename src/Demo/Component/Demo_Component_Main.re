@@ -13,8 +13,8 @@ type state = {.
 type setTab = (. tab) => {. "tab": tab};
 type actions = {.
   setTab,
-  setCurrBookId:
-    (. Domain.Book.id) => {. "currBookId": option(Domain.Book.id)},
+  setCurrBookId: (. option(Domain.Book.id)) =>
+    {. "currBookId": option(Domain.Book.id)},
   addNew: (. unit) => {. "currBookId": option(Domain.Book.id)},
   detail: Js.t(Detail.actions),
 };
@@ -66,7 +66,7 @@ let state = {
 
 let actions = {
   "setTab": (. tab) => {"tab": tab},
-  "setCurrBookId": (. bookId) => {"currBookId": Some(bookId)},
+  "setCurrBookId": (. bookId) => {"currBookId": bookId},
   "addNew": (.) => {"currBookId": None},
   "detail": Detail.actions,
 };
@@ -97,11 +97,9 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
       <Book props={
         "currBookId": currBookId,
         "book": book,
-        "onSelect": (. bookId) => {
-          open Hy.Action;
-          exec(actions##setCurrBookId, action => action(. bookId));
-          exec(actions##detail##reset, nullary);
-        },
+        "onSelect": (. bookId) =>
+          Hy.Action.(exec(actions##setCurrBookId, action =>
+            action(. Some(bookId)))),
       } />)
     |> Hy.array;
   let currBook = currBookId |> Js.Option.andThen((. currBookId) =>
@@ -110,11 +108,6 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
   let addNewClass = "panel-block" ++ switch (currBookId) {
     | Some(_) => ""
     | None => " is-active"
-  };
-  let handleAddNew(. _event) = {
-    open Hy.Action;
-    exec(actions##addNew, nullary);
-    exec(actions##detail##reset, nullary);
   };
 
   <section>
@@ -132,7 +125,7 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
             <nav _class="panel">
               <div _class="panel-block">
                 <p _class="control has-icons-left">
-                  <input _class="input is-small" _type="text" placeholder="Filter" />
+                  <input _class="input is-small" _type="search" placeholder="Filter" />
                   <span _class="icon is-small is-left">{Hy.string({j|🔍|j})}</span>
                 </p>
               </div>
@@ -142,7 +135,11 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
                 <Tab props=tabProps(~currTab, ~newTab=`Reading, ~setTab, ()) />
                 <Tab props=tabProps(~currTab, ~newTab=`Read, ~setTab, ()) />
               </p>
-              <a _class=addNewClass onclick=handleAddNew>
+              <a
+                _class=addNewClass
+                onclick={(. _event) =>
+                  Hy.Action.exec(actions##setCurrBookId, action =>
+                    action(. None))}>
                 <span _class="panel-icon">{Hy.string({j|🆕|j})}</span>
                 {Hy.string("Add New")}
               </a>

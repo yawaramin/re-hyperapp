@@ -1,5 +1,6 @@
 module Hy = Yawaramin_ReHyperapp;
 module Domain = Demo_Domain;
+include Hy.Component.Static;
 
 type optionProps = {.
   "status": Domain.Status.t,
@@ -12,114 +13,117 @@ module Option: Hy.Component.Type with type props = optionProps = {
   type props = optionProps;
 
   let make(~state as _=?, ~actions as _=?, ~props, _children) = {
-    let status = props##status;
+    open Domain.Status;
 
-    <option selected={status == props##currStatus}>
-      {status |> Domain.Status.toString |> Hy.string}
+    let status = props##status;
+    let value = toString(status);
+
+    <option value selected={status == props##currStatus}>
+      {Hy.string(toEmoji(status) ++ " " ++ value)}
     </option>;
   };
 };
 
-type state = {.
-  author: option(string),
-  description: option(string),
-  title: option(string),
-  status: option(Domain.Status.t),
-};
-
-type actions = {.
-  reset: (. unit) => Js.t(state),
-  setAuthor: (. string) => {. "author": option(string)},
-  setDescription: (. string) => {. "description": option(string)},
-  setTitle: (. string) => {. "title": option(string)},
-  setStatus: (. string) => {. "status": option(Domain.Status.t)},
-};
-
 type props = option(Domain.Book.t);
-
-let state = {
-  "author": None,
-  "description": None,
-  "title": None,
-  "status": None,
-};
-
-let actions = {
-  "reset": (.) => state,
-  "setAuthor": (. author) => {"author": Some(author)},
-  "setDescription": (. description) => {"description": Some(description)},
-  "setTitle": (. title) => {"title": Some(title)},
-  "setStatus": (. status) => {"status": Domain.Status.fromString(status)},
-};
 
 let (or) = Belt.Option.getWithDefault;
 
-let make(~state=state, ~actions=actions, ~props, _children) = {
+let make(~state as _=?, ~actions as _=?, ~props, _children) = {
   let id = Js.Option.map((. book) => book##id, props) or "(New)";
-  let title = state##title or Js.Option.map((. book) => book##title, props) or "";
-  let author = state##author or Js.Option.map((. book) => book##author, props) or "";
-  let description = state##description or Js.Option.map((. book) => book##description, props) or "";
-  let status = state##status or Js.Option.map((. book) => book##status, props) or `ToRead;
-  let statusEmoji = status |> Domain.Status.toEmoji |> Hy.string;
+  let title = Js.Option.map((. book) => book##title, props) or "";
+  let author = Js.Option.map((. book) => book##author, props) or "";
+  let description = Js.Option.map((. book) => book##description, props) or "";
+  let status = Js.Option.map((. book) => book##status, props) or `ToRead;
+  let onsubmit(. event) = {
+    event##preventDefault();
+    Js.log(event##target);
+  };
 
   <div _class="tile is-parent">
     <div _class="tile is-child box">
-      <div _class="field">
-        <label _class="label">{Hy.string("ID")}</label>
-        <p _class="content">{Hy.string(id)}</p>
-      </div>
-      <div _class="field">
-        <label _class="label">{Hy.string({j|❡ Title|j})}</label>
-        <div _class="control">
-          <input
-            _class="input"
-            _type="text"
-            value=title
-            onblur={(. event) =>
-              Hy.Action.exec(actions##setTitle, action =>
-                action(. event##target##value))} />
+      <form onsubmit>
+        <div _class="field">
+          <label _class="label" _for="detail-id">
+            {Hy.string("ID")}
+          </label>
+          <div _class="control">
+            <input
+              _class="input"
+              readonly=true
+              id="detail-id"
+              name="id"
+              value=id />
+          </div>
         </div>
-      </div>
-      <div _class="field">
-        <label _class="label">{Hy.string({j|🗣 Author(s)|j})}</label>
-        <div _class="control">
-          <input
-            _class="input"
-            _type="text"
-            placeholder="Joe Q. Author"
-            value=author
-            onblur={(. event) =>
-              Hy.Action.exec(actions##setAuthor, action =>
-                action(. event##target##value))} />
+
+        <div _class="field">
+          <label _class="label" _for="detail-title">
+            {Hy.string({j|❡ Title|j})}
+          </label>
+          <div _class="control">
+            <input
+              _class="input"
+              id="detail-title"
+              name="title"
+              value=title required=true />
+          </div>
         </div>
-      </div>
-      <div _class="field">
-        <label _class="label">{Hy.string({j|📝 Description|j})}</label>
-        <div _class="control">
-          <textarea
-            _class="textarea"
-            placeholder="A nice description of the document"
-            value=description
-            onblur={(. event) =>
-              Hy.Action.exec(actions##setDescription, action =>
-                action(. event##target##value))} />
+
+        <div _class="field">
+          <label _class="label" _for="detail-author">
+            {Hy.string({j|🗣 Author(s)|j})}
+          </label>
+          <div _class="control">
+            <input
+              _class="input"
+              id="detail-author"
+              name="author"
+              value=author
+              placeholder="Joe Q. Author"
+              required=true />
+          </div>
         </div>
-      </div>
-      <div _class="field">
-        <label _class="label">{Hy.string({j|📚 Status|j})}</label>
-        <div _class="control has-icons-left">
+
+        <div _class="field">
+          <label _class="label" _for="detail-description">
+            {Hy.string({j|📝 Description|j})}
+          </label>
+          <div _class="control">
+            <textarea
+              _class="textarea"
+              id="detail-description"
+              name="description"
+              placeholder="A nice description of the document"
+              value=description />
+          </div>
+        </div>
+
+        <div _class="field">
+          <label _class="label" _for="detail-status">
+            {Hy.string({j|📚 Status|j})}
+          </label>
           <div _class="select">
-            <select onchange={(. event) =>
-              Hy.Action.exec(actions##setStatus, action =>
-                action(. event##target##value))}>
+            <select id="detail-status" name="status">
               <Option props={"status": `ToRead, "currStatus": status} />
               <Option props={"status": `Reading, "currStatus": status} />
               <Option props={"status": `Read, "currStatus": status} />
             </select>
           </div>
-          <span _class="icon is-left">{statusEmoji}</span>
         </div>
-      </div>
+
+        <div _class="field is-grouped">
+          <div _class="control">
+            <button _type="submit" _class="button is-link">
+              {Hy.string("Save")}
+            </button>
+          </div>
+          <div _class="control">
+            <p>
+              {Hy.string("Clicking any of the options in the left panel will reset this entry form.")}
+            </p>
+          </div>
+        </div>
+      </form>
     </div>
   </div>;
 };
