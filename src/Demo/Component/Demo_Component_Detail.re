@@ -55,10 +55,10 @@ let actions = {
 let (or) = Belt.Option.getWithDefault;
 
 let make(~state=state, ~actions=actions, ~props, _children) = {
-  let author = state##author or Js.Option.map((. book) => book##author, props) or "";
-  let description = state##description or Js.Option.map((. book) => book##description, props) or "";
   let id = Js.Option.map((. book) => book##id, props) or "(New)";
   let title = state##title or Js.Option.map((. book) => book##title, props) or "";
+  let author = state##author or Js.Option.map((. book) => book##author, props) or "";
+  let description = state##description or Js.Option.map((. book) => book##description, props) or "";
   let status = state##status or Js.Option.map((. book) => book##status, props) or `ToRead;
   let statusEmoji = status |> Domain.Status.toEmoji |> Hy.string;
 

@@ -110,6 +110,10 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
     | Some(_) => ""
     | None => " is-active"
   };
+  let handleAddNew(. _event) = {
+    Hy.exec(actions##addNew, action => action(.));
+    Hy.exec(actions##detail##reset, action => action(.));
+  };
 
   <section>
     <nav _class="level">
@@ -136,10 +140,7 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
                 <Tab props=tabProps(~currTab, ~newTab=`Reading, ~setTab, ()) />
                 <Tab props=tabProps(~currTab, ~newTab=`Read, ~setTab, ()) />
               </p>
-              <a
-                _class=addNewClass
-                onclick={(. _event) =>
-                  Hy.exec(actions##addNew, action => action(.))}>
+              <a _class=addNewClass onclick=handleAddNew>
                 <span _class="panel-icon">{Hy.string({j|🆕|j})}</span>
                 {Hy.string("Add New")}
               </a>
