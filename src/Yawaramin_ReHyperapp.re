@@ -153,7 +153,7 @@ external h_: (string, [@bs.as {json|{}|json}] _, array(vdom)) => vdom =
 [@bs.module "hyperapp"] external make: (
   ~state: Js.t({..}) as 'state,
   ~actions: Js.t({..}) as 'actions,
-  ~view: (. 'state, 'actions) => vdom,
+  ~view: [@bs.uncurry] ('state, 'actions) => vdom,
   Js.nullable(element),
 ) => t = "app";
 
