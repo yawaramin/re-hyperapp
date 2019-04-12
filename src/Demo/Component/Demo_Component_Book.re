@@ -27,7 +27,7 @@ let make(~state as _=?, ~actions as _=?, ~props, _children) = {
     id
     key=id
     onclick={(. _event) =>
-      Hy.exec(props##onSelect, action => action(. bookId))}>
+      Hy.Action.exec(props##onSelect, action => action(. bookId))}>
     <span _class="panel-icon">
       {book##status |> Domain.Status.toEmoji |> Hy.string}
     </span>

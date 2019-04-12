@@ -33,7 +33,7 @@ module Tab: Hy.Component.Type with type props = tabProps = {
     <a
       _class=isActive(props##currTab, newTab)
       onclick={(. _event) =>
-        Hy.exec(props##setTab, action => action(. newTab))}>
+        Hy.Action.exec(props##setTab, action => action(. newTab))}>
       {Hy.string(Domain.Status.(toEmoji(newTab) ++ " " ++ toString(newTab)))}
     </a>;
   };
@@ -98,8 +98,9 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
         "currBookId": currBookId,
         "book": book,
         "onSelect": (. bookId) => {
-          Hy.exec(actions##setCurrBookId, action => action(. bookId));
-          Hy.exec(actions##detail##reset, action => action(.));
+          open Hy.Action;
+          exec(actions##setCurrBookId, action => action(. bookId));
+          exec(actions##detail##reset, nullary);
         },
       } />)
     |> Hy.array;
@@ -111,8 +112,9 @@ let make(~state=state, ~actions=actions, ~props as _, _) = {
     | None => " is-active"
   };
   let handleAddNew(. _event) = {
-    Hy.exec(actions##addNew, action => action(.));
-    Hy.exec(actions##detail##reset, action => action(.));
+    open Hy.Action;
+    exec(actions##addNew, nullary);
+    exec(actions##detail##reset, nullary);
   };
 
   <section>

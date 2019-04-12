@@ -76,7 +76,7 @@ let make(~state=state, ~actions=actions, ~props, _children) = {
             _type="text"
             value=title
             onblur={(. event) =>
-              Hy.exec(actions##setTitle, action =>
+              Hy.Action.exec(actions##setTitle, action =>
                 action(. event##target##value))} />
         </div>
       </div>
@@ -89,7 +89,7 @@ let make(~state=state, ~actions=actions, ~props, _children) = {
             placeholder="Joe Q. Author"
             value=author
             onblur={(. event) =>
-              Hy.exec(actions##setAuthor, action =>
+              Hy.Action.exec(actions##setAuthor, action =>
                 action(. event##target##value))} />
         </div>
       </div>
@@ -101,7 +101,7 @@ let make(~state=state, ~actions=actions, ~props, _children) = {
             placeholder="A nice description of the document"
             value=description
             onblur={(. event) =>
-              Hy.exec(actions##setDescription, action =>
+              Hy.Action.exec(actions##setDescription, action =>
                 action(. event##target##value))} />
         </div>
       </div>
@@ -110,7 +110,7 @@ let make(~state=state, ~actions=actions, ~props, _children) = {
         <div _class="control has-icons-left">
           <div _class="select">
             <select onchange={(. event) =>
-              Hy.exec(actions##setStatus, action =>
+              Hy.Action.exec(actions##setStatus, action =>
                 action(. event##target##value))}>
               <Option props={"status": `ToRead, "currStatus": status} />
               <Option props={"status": `Reading, "currStatus": status} />

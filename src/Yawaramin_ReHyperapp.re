@@ -17,6 +17,18 @@ type vdom;
     [actions] types of components which don't have state or actions. */
 [@bs.obj] external empty: unit => Js.t(unit) = "";
 
+/** Helpers for executing actions. */
+module Action = {
+  /** [exec(action, func)] carries out the given Hyperapp [action] by
+      feeding it to the [func] callback, and discards the result. Meant
+      to be used in event handlers. */
+  let exec(action, func) = action |> func |> ignore;
+
+  /** [nullary] should be used with [exec] when the intent is to execute
+      an action which doesn't take any payload. */
+  let nullary(action) = action(.);
+};
+
 /** Helpers for creating re-hyperapp components. */
 module Component = {
   /** Type of a custom component (i.e. a capitalized JSX element). This
@@ -112,11 +124,6 @@ external array: array(vdom) => vdom = "%identity";
 
 external float: float => vdom = "%identity";
 external int: int => vdom = "%identity";
-
-/** [exec(action, func)] carries out the given Hyperapp [action] by
-    feeding it to the [func] callback, and discards the result. Meant to
-    be used in event handlers. */
-let exec(action, func) = action |> func |> ignore;
 
 /** [null] allows injecting 'nothing' into the VDOM. */
 [@bs.val] external null: vdom = "";
